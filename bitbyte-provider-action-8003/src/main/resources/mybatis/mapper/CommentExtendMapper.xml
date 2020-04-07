@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzk.bitbyte.mapper.CommentExtendMapper">
+    <!-- 基本的评论 -->
+    <resultMap id="BaseComment" type="Comment">
+        <id column="comment_floor" jdbcType="DECIMAL" property="commentFloor"/>
+        <id column="comment_article" jdbcType="VARCHAR" property="commentArticle"/>
+        <result column="comment_user" jdbcType="VARCHAR"
+                property="commentUser"/>
+        <result column="comment_user_name" jdbcType="VARCHAR"
+                property="commentUserName"/>
+        <result column="comment_content" jdbcType="VARCHAR"
+                property="commentContent"/>
+        <result column="comment_time" jdbcType="TIMESTAMP"
+                property="commentTime"/>
+        <result column="comment_user_pic" jdbcType="VARCHAR"
+                property="commentUserPic"/>
+    </resultMap>
+    <!-- 带回复信息的评论 -->
+    <resultMap id="BaseCommentWithReply" extends="BaseComment"
+               type="CommentExtend">
+        <!-- 评论回复集合 -->
+        <collection property="commentReplyList" ofType="CommentReply">
+            <id column="reply_comment_floor" jdbcType="DECIMAL"
+                property="replyCommentFloor"/>
+            <id column="reply_comment_article" jdbcType="VARCHAR"
+                property="replyCommentArticle"/>
+            <id column="reply_floor" jdbcType="DECIMAL" property="replyFloor"/>
+            <result column="from_user_name" jdbcType="VARCHAR"
+                    property="fromUserName"/>
+            <result column="from_user_id" jdbcType="VARCHAR"
+                    property="fromUserId"/>
+            <result column="to_user_name" jdbcType="VARCHAR"
+                    property="toUserName"/>
+            <result column="to_user_id" jdbcType="VARCHAR"
+                    property="toUserId"/>
+            <result column="reply_content" jdbcType="VARCHAR"
+                    property="replyContent"/>
+            <result column="reply_time" jdbcType="TIMESTAMP"
+                    property="replyTime"/>
+        </collection>
+    </resultMap>
+    <!-- 获得文章所有的评论及其回复信息 -->
+    <select id="findArticleCommentsById" parameterType="String"
+            resultMap="BaseCommentWithReply">
+        SELECT c.comment_article,
+               c.comment_floor,
+               c.comment_user,
+               c.comment_user_name,
+               c.comment_user_pic,
+               c.comment_time,
+               c.comment_content,
+               cr.reply_comment_article,
+               cr.reply_comment_floor,
+               cr.reply_floor,
+               cr.from_user_id,
+               cr.from_user_name,
+               cr.to_user_id,
+               cr.to_user_name,
+               cr.reply_time,
+               cr.reply_content
+        FROM comment as c
+                 LEFT JOIN comment_reply as cr
+                           ON (c.comment_article = cr.reply_comment_article AND
+                               c.comment_floor = cr.reply_comment_floor)
+        WHERE c.comment_article = #{articleId}
+    </select>
+</mapper>

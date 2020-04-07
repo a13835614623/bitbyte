@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzk.bitbyte.mapper.ArticleMapper">
+  <resultMap id="BaseResultMap" type="com.zzk.bitbyte.po.Article">
+    <id column="article_id" jdbcType="VARCHAR" property="articleId" />
+    <result column="article_title" jdbcType="VARCHAR" property="articleTitle" />
+    <result column="article_user" jdbcType="VARCHAR" property="articleUser" />
+    <result column="article_read" jdbcType="DECIMAL" property="articleRead" />
+    <result column="article_state" jdbcType="INTEGER" property="articleState" />
+    <result column="article_publish_time" jdbcType="TIMESTAMP" property="articlePublishTime" />
+    <result column="article_tags" jdbcType="VARCHAR" property="articleTags" />
+    <result column="article_part" jdbcType="INTEGER" property="articlePart" />
+    <result column="createAt" jdbcType="TIMESTAMP" property="createat" />
+    <result column="updateAt" jdbcType="TIMESTAMP" property="updateat" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.zzk.bitbyte.po.ArticleWithBLOBs">
+    <result column="article_content" jdbcType="LONGVARCHAR" property="articleContent" />
+    <result column="article_md_content" jdbcType="LONGVARCHAR" property="articleMdContent" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    article_id, article_title, article_user, article_read, article_state, article_publish_time, 
+    article_tags, article_part, createAt, updateAt
+  </sql>
+  <sql id="Blob_Column_List">
+    article_content, article_md_content
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.zzk.bitbyte.po.ArticleExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from article
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.zzk.bitbyte.po.ArticleExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from article
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from article
+    where article_id = #{articleId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from article
+    where article_id = #{articleId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zzk.bitbyte.po.ArticleExample">
+    delete from article
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zzk.bitbyte.po.ArticleWithBLOBs">
+    insert into article (article_id, article_title, article_user, 
+      article_read, article_state, article_publish_time, 
+      article_tags, article_part, createAt, 
+      updateAt, article_content, article_md_content
+      )
+    values (#{articleId,jdbcType=VARCHAR}, #{articleTitle,jdbcType=VARCHAR}, #{articleUser,jdbcType=VARCHAR}, 
+      #{articleRead,jdbcType=DECIMAL}, #{articleState,jdbcType=INTEGER}, #{articlePublishTime,jdbcType=TIMESTAMP}, 
+      #{articleTags,jdbcType=VARCHAR}, #{articlePart,jdbcType=INTEGER}, #{createat,jdbcType=TIMESTAMP}, 
+      #{updateat,jdbcType=TIMESTAMP}, #{articleContent,jdbcType=LONGVARCHAR}, #{articleMdContent,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zzk.bitbyte.po.ArticleWithBLOBs">
+    insert into article
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="articleId != null">
+        article_id,
+      </if>
+      <if test="articleTitle != null">
+        article_title,
+      </if>
+      <if test="articleUser != null">
+        article_user,
+      </if>
+      <if test="articleRead != null">
+        article_read,
+      </if>
+      <if test="articleState != null">
+        article_state,
+      </if>
+      <if test="articlePublishTime != null">
+        article_publish_time,
+      </if>
+      <if test="articleTags != null">
+        article_tags,
+      </if>
+      <if test="articlePart != null">
+        article_part,
+      </if>
+      <if test="createat != null">
+        createAt,
+      </if>
+      <if test="updateat != null">
+        updateAt,
+      </if>
+      <if test="articleContent != null">
+        article_content,
+      </if>
+      <if test="articleMdContent != null">
+        article_md_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="articleId != null">
+        #{articleId,jdbcType=VARCHAR},
+      </if>
+      <if test="articleTitle != null">
+        #{articleTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="articleUser != null">
+        #{articleUser,jdbcType=VARCHAR},
+      </if>
+      <if test="articleRead != null">
+        #{articleRead,jdbcType=DECIMAL},
+      </if>
+      <if test="articleState != null">
+        #{articleState,jdbcType=INTEGER},
+      </if>
+      <if test="articlePublishTime != null">
+        #{articlePublishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="articleTags != null">
+        #{articleTags,jdbcType=VARCHAR},
+      </if>
+      <if test="articlePart != null">
+        #{articlePart,jdbcType=INTEGER},
+      </if>
+      <if test="createat != null">
+        #{createat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateat != null">
+        #{updateat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="articleContent != null">
+        #{articleContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="articleMdContent != null">
+        #{articleMdContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zzk.bitbyte.po.ArticleExample" resultType="java.lang.Long">
+    select count(*) from article
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update article
+    <set>
+      <if test="record.articleId != null">
+        article_id = #{record.articleId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.articleTitle != null">
+        article_title = #{record.articleTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.articleUser != null">
+        article_user = #{record.articleUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.articleRead != null">
+        article_read = #{record.articleRead,jdbcType=DECIMAL},
+      </if>
+      <if test="record.articleState != null">
+        article_state = #{record.articleState,jdbcType=INTEGER},
+      </if>
+      <if test="record.articlePublishTime != null">
+        article_publish_time = #{record.articlePublishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.articleTags != null">
+        article_tags = #{record.articleTags,jdbcType=VARCHAR},
+      </if>
+      <if test="record.articlePart != null">
+        article_part = #{record.articlePart,jdbcType=INTEGER},
+      </if>
+      <if test="record.createat != null">
+        createAt = #{record.createat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateat != null">
+        updateAt = #{record.updateat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.articleContent != null">
+        article_content = #{record.articleContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.articleMdContent != null">
+        article_md_content = #{record.articleMdContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update article
+    set article_id = #{record.articleId,jdbcType=VARCHAR},
+      article_title = #{record.articleTitle,jdbcType=VARCHAR},
+      article_user = #{record.articleUser,jdbcType=VARCHAR},
+      article_read = #{record.articleRead,jdbcType=DECIMAL},
+      article_state = #{record.articleState,jdbcType=INTEGER},
+      article_publish_time = #{record.articlePublishTime,jdbcType=TIMESTAMP},
+      article_tags = #{record.articleTags,jdbcType=VARCHAR},
+      article_part = #{record.articlePart,jdbcType=INTEGER},
+      createAt = #{record.createat,jdbcType=TIMESTAMP},
+      updateAt = #{record.updateat,jdbcType=TIMESTAMP},
+      article_content = #{record.articleContent,jdbcType=LONGVARCHAR},
+      article_md_content = #{record.articleMdContent,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update article
+    set article_id = #{record.articleId,jdbcType=VARCHAR},
+      article_title = #{record.articleTitle,jdbcType=VARCHAR},
+      article_user = #{record.articleUser,jdbcType=VARCHAR},
+      article_read = #{record.articleRead,jdbcType=DECIMAL},
+      article_state = #{record.articleState,jdbcType=INTEGER},
+      article_publish_time = #{record.articlePublishTime,jdbcType=TIMESTAMP},
+      article_tags = #{record.articleTags,jdbcType=VARCHAR},
+      article_part = #{record.articlePart,jdbcType=INTEGER},
+      createAt = #{record.createat,jdbcType=TIMESTAMP},
+      updateAt = #{record.updateat,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzk.bitbyte.po.ArticleWithBLOBs">
+    update article
+    <set>
+      <if test="articleTitle != null">
+        article_title = #{articleTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="articleUser != null">
+        article_user = #{articleUser,jdbcType=VARCHAR},
+      </if>
+      <if test="articleRead != null">
+        article_read = #{articleRead,jdbcType=DECIMAL},
+      </if>
+      <if test="articleState != null">
+        article_state = #{articleState,jdbcType=INTEGER},
+      </if>
+      <if test="articlePublishTime != null">
+        article_publish_time = #{articlePublishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="articleTags != null">
+        article_tags = #{articleTags,jdbcType=VARCHAR},
+      </if>
+      <if test="articlePart != null">
+        article_part = #{articlePart,jdbcType=INTEGER},
+      </if>
+      <if test="createat != null">
+        createAt = #{createat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateat != null">
+        updateAt = #{updateat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="articleContent != null">
+        article_content = #{articleContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="articleMdContent != null">
+        article_md_content = #{articleMdContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where article_id = #{articleId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.zzk.bitbyte.po.ArticleWithBLOBs">
+    update article
+    set article_title = #{articleTitle,jdbcType=VARCHAR},
+      article_user = #{articleUser,jdbcType=VARCHAR},
+      article_read = #{articleRead,jdbcType=DECIMAL},
+      article_state = #{articleState,jdbcType=INTEGER},
+      article_publish_time = #{articlePublishTime,jdbcType=TIMESTAMP},
+      article_tags = #{articleTags,jdbcType=VARCHAR},
+      article_part = #{articlePart,jdbcType=INTEGER},
+      createAt = #{createat,jdbcType=TIMESTAMP},
+      updateAt = #{updateat,jdbcType=TIMESTAMP},
+      article_content = #{articleContent,jdbcType=LONGVARCHAR},
+      article_md_content = #{articleMdContent,jdbcType=LONGVARCHAR}
+    where article_id = #{articleId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zzk.bitbyte.po.Article">
+    update article
+    set article_title = #{articleTitle,jdbcType=VARCHAR},
+      article_user = #{articleUser,jdbcType=VARCHAR},
+      article_read = #{articleRead,jdbcType=DECIMAL},
+      article_state = #{articleState,jdbcType=INTEGER},
+      article_publish_time = #{articlePublishTime,jdbcType=TIMESTAMP},
+      article_tags = #{articleTags,jdbcType=VARCHAR},
+      article_part = #{articlePart,jdbcType=INTEGER},
+      createAt = #{createat,jdbcType=TIMESTAMP},
+      updateAt = #{updateat,jdbcType=TIMESTAMP}
+    where article_id = #{articleId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzk.bitbyte.mapper.ReadHistoryExtendMapper">
+    <resultMap id="BaseResultMap" type="com.zzk.bitbyte.po.ReadHistory">
+        <id column="read_id" jdbcType="VARCHAR" property="readId"/>
+        <result column="read_article" jdbcType="VARCHAR" property="readArticle"/>
+        <result column="read_time" jdbcType="TIMESTAMP" property="readTime"/>
+        <result column="read_user" jdbcType="VARCHAR" property="readUser"/>
+        <result column="createAt" jdbcType="TIMESTAMP" property="createat"/>
+        <result column="updateAt" jdbcType="TIMESTAMP" property="updateat"/>
+    </resultMap>
+    <!-- 根据用户ID获取用户记录-->
+    <select id="findReadHistoryByUserId" parameterType="String" resultMap="BaseResultMap">
+        SELECT rh.read_id, read_article, read_time, read_user
+        FROM read_history rh
+        WHERE read_user = #{userId}
+    </select>
+
+    <!-- 根据用户ID获取用户阅读过的所有文章ID-->
+    <select id="findReadArticleByUserId" parameterType="String" resultType="String">
+        SELECT DISTINCT read_article
+        FROM read_history rh
+        WHERE read_user = #{userId}
+    </select>
+
+    <!-- 根据文章ID列表获取阅读过的用户ID-->
+    <select id="findUserIdListByArticleId" parameterType="List" resultType="String">
+        SELECT distinct rh.read_user
+        FROM read_history rh
+        where read_article in
+        <foreach collection="articleIdList" item="aid" open="( " close=" )" separator=",">
+            aid
+        </foreach>
+    </select>
+</mapper>

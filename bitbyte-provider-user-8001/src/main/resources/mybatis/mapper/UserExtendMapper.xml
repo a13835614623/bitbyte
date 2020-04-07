@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzk.bitbyte.mapper.UserExtendMapper">
+    <resultMap id="BaseResultMap" type="com.zzk.bitbyte.po.User">
+        <id column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="user_sex" jdbcType="VARCHAR" property="userSex"/>
+        <result column="user_password" jdbcType="VARCHAR" property="userPassword"/>
+        <result column="user_mobile" jdbcType="VARCHAR" property="userMobile"/>
+        <result column="user_birthday" jdbcType="DATE" property="userBirthday"/>
+        <result column="user_address" jdbcType="VARCHAR"
+                property="userAddress"/>
+        <result column="user_email" jdbcType="VARCHAR" property="userEmail"/>
+        <result column="user_state" jdbcType="INTEGER" property="userState"/>
+        <result column="createAt" jdbcType="TIMESTAMP" property="createat"/>
+        <result column="updateAt" jdbcType="TIMESTAMP" property="updateat"/>
+        <result column="user_pic" jdbcType="VARCHAR" property="userPic"/>
+    </resultMap>
+
+    <resultMap id="UserResultMapWithRoleList" extends="BaseResultMap" type="com.zzk.bitbyte.po.extend.UserExtend">
+        <collection property="roleList" ofType="com.zzk.bitbyte.po.Role">
+            <id column="role_id" jdbcType="VARCHAR" property="roleId"/>
+            <result column="role_desc" jdbcType="VARCHAR" property="roleDesc"/>
+            <result column="role_str" jdbcType="VARCHAR" property="roleStr"/>
+        </collection>
+    </resultMap>
+
+    <sql id="where_query_sql_limit">
+        <include refid="where_query_sql"></include>
+        <if test="start!=null and count!=null">
+            limit ${start},${count}
+        </if>
+    </sql>
+    <sql id="where_query_sql">
+        <where>
+            <if test="role!=null">
+                <if test="role.roleId!=null and role.roleId!=''">
+                    AND r.role_id=#{role.roleId}
+                </if>
+                <if test="role.roleStr!=null and role.roleStr!=''">
+                    AND r.role_str=#{role.roleStr}
+                </if>
+                <if test="role.roleDesc!=null and role.roleDesc!=''">
+                    AND r.role_desc=#{role.roleDesc}
+                </if>
+            </if>
+            <if test="user!=null">
+                <if test="user.userName!=null and user.userName!=''">
+                    AND user.user_name like '${user.userName}%'
+                </if>
+                <if test="user.userSex!=null and user.userSex!=''">
+                    AND user.user_sex = #{user.userSex}
+                </if>
+                <if test="user.userAddress!=null and user.userAddress!=''">
+                    AND user.user_address like '${user.userAddress}%'
+                </if>
+                <if test="user.userState!=null">
+                    AND user.user_state=#{user.userState}
+                </if>
+                <if test="user.userId!=null and user.userId!=''">
+                    AND user.user_id=#{user.userId}
+                </if>
+                <if test="user.userMobile!=null and user.userMobile!=''">
+                    AND user.user_mobile like '${user.userMobile}%'
+                </if>
+                <if test="user.userEmail!=null and user.userEmail!=''">
+                    AND user.user_email like '${user.userEmail}%'
+                </if>
+                <if test="user.userPassword!=null and user.userPassword!=''">
+                    AND user.user_password=#{user.userPassword}
+                </if>
+            </if>
+        </where>
+    </sql>
+
+    <sql id="user_columns">
+                user_id,
+               user_name,
+               user_sex,
+               user_mobile,
+               user_birthday,
+               user_address,
+               user_password,
+               user_email,
+               createAt,
+               updateAt,
+               user_pic
+    </sql>
+
+    <!--    根据用户手机号或者邮箱获取用户信息-->
+    <select id="getUserByUserMobileOrEmail" parameterType="String" resultMap="BaseResultMap">
+        select <include refid="user_columns"/>
+        from user u
+        where u.user_email = #{mobileOrEmail}
+           or u.user_mobile = #{mobileOrEmail}
+    </select>
+
+    <!-- 更新用户 -->
+    <update id="updateUser" parameterType="User">
+        UPDATE user SET
+        <if test="userPassword!=null and userPassword.length()>=8">
+            user.user_password=#{userPassword},
+        </if>
+        <if test="userName!=null and userName!=''">
+            user.user_name=#{userName},
+        </if>
+        <if test="userSex and userSex!=''">
+            user.user_sex=#{userSex},
+        </if>
+        <if test="userMobile!=null and userSex!=''">
+            user.user_mobile=#{userMobile},
+        </if>
+        <if test="userBirthday!=null">
+            user.user_birthday=#{userBirthday},
+        </if>
+        <if test="userEmail!=null and userEmail!=''">
+            user.user_email=#{userEmail},
+        </if>
+        <if test="userPic!=null">
+            user.user_pic=#{userPic},
+        </if>
+        <if test="userAddress!=null and userAddress!=''">
+            user.user_address=#{userAddress},
+        </if>
+        <if test="userState!=null">
+            user.user_state=#{userState},
+        </if>
+        user.updateat = NOW()
+        WHERE user.user_id=#{userId};
+        <if test="userId!=null and userId!=''">
+            UPDATE comment
+            <trim prefix="SET">
+                <if test="userName!=null and userName!=''">
+                    comment.comment_user_name=#{userName},
+                </if>
+                <if test="userPic!=null">
+                    comment.comment_user_pic=#{userPic},
+                </if>
+                comment.updateat = NOW()
+                where comment.comment_user=#{userId};
+            </trim>
+            <if test="userName!=null and userName!=''">
+                UPDATE comment_reply SET
+                comment_reply.from_user_name=#{userName},
+                comment_reply.updateat = NOW()
+                where comment_reply.from_user_id=#{userId};
+                UPDATE comment_reply SET
+                comment_reply.to_user_name=#{userName},
+                comment_reply.updateat = NOW()
+                where comment_reply.to_user_id=#{userId};
+            </if>
+        </if>
+    </update>
+
+    <!-- 用户综合查询 -->
+    <select id="findUsersByQueryVo" parameterType="userQueryVo"
+            resultMap="UserResultMapWithRoleList">
+        SELECT user.user_id, user_name, user_sex, user_mobile, user_birthday, user_address, user_email,user_state,
+        user_pic,r.role_id,r.role_desc,r.role_str
+        FROM user left join user_role ur on user.user_id = ur.user_id
+        left join role r on ur.role_id = r.role_id
+        <include refid="where_query_sql_limit"/>
+    </select>
+
+    <!-- 用户数量综合查询 -->
+    <select id="findUsersCountByQueryVo" parameterType="userQueryVo"
+            resultType="Integer">
+        SELECT count(*) FROM user
+        <include refid="where_query_sql"/>
+    </select>
+
+    <!-- 根据用户id获取关注列表 -->
+    <select id="findSubscribersById" parameterType="String"
+            resultMap="BaseResultMap">
+        SELECT user.user_id, user.user_name, user.user_pic
+        FROM user,
+             subscribe
+        WHERE user.user_id = subscribe.sub_user_parent
+          AND subscribe.sub_user_child = #{userId}
+    </select>
+
+    <!-- 根据用户id获取粉丝列表 -->
+    <select id="findFansByUserId" parameterType="String"
+            resultMap="BaseResultMap">
+        SELECT user.user_id, user.user_name, user.user_pic
+        FROM user,
+             subscribe
+        WHERE user.user_id = subscribe.sub_user_child
+          AND subscribe.sub_user_parent = #{userId}
+    </select>
+
+</mapper>

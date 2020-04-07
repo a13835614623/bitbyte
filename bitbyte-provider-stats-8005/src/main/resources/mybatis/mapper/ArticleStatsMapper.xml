@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzk.bitbyte.mapper.ArticleStatsMapper">
+    <sql id="query_sql">
+        <where>
+            article_publish_time IS NOT NULL
+            <if test="publishTimeStart!=null">
+                AND article_publish_time >=#{publishTimeStart}
+            </if>
+            <if test="publishTimeEnd!=null">
+                AND article_publish_time &lt;=#{publishTimeEnd}
+            </if>
+        </where>
+    </sql>
+    <!--  根据查询对象,获取博客统计数据-->
+    <select id="getArticleStatsListByQueryVo" parameterType="ArticleStatsQueryVo" resultType="ArticleStats">
+        SELECT
+        <if test="isGroupByPart">
+            article_part AS part,
+        </if>
+        <if test="isGroupByPublishTime">
+            DATE_FORMAT(article_publish_time, #{dateFormat}) AS publishTime,
+        </if>
+        SUM(article_read) AS readNum,
+        COUNT(article.article_id) AS count
+        FROM article
+        WHERE article_publish_time IS NOT NULL
+        <if test="publishTimeStart!=null">
+            AND article_publish_time >=#{publishTimeStart}
+        </if>
+        <if test="publishTimeEnd!=null">
+            AND article_publish_time &lt;=#{publishTimeEnd}
+        </if>
+        <if test="isGroupByPart or isGroupByPublishTime">
+            GROUP BY
+            <trim suffixOverrides=",">
+                <if test="isGroupByPart">
+                    part,
+                </if>
+                <if test="isGroupByPublishTime">
+                    publishTime
+                </if>
+            </trim>
+        </if>
+    </select>
+
+</mapper>

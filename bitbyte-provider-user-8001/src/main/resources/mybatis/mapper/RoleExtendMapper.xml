@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzk.bitbyte.mapper.RoleExtendMapper">
+    <resultMap id="BaseResultMap" type="com.zzk.bitbyte.po.Role">
+        <id column="role_id" jdbcType="VARCHAR" property="roleId"/>
+        <result column="role_desc" jdbcType="VARCHAR" property="roleDesc"/>
+        <result column="role_str" jdbcType="VARCHAR" property="roleStr"/>
+        <result column="createAt" jdbcType="TIMESTAMP" property="createat"/>
+        <result column="updateAt" jdbcType="TIMESTAMP" property="updateat"/>
+    </resultMap>
+    <select id="getRoleListByQueryVo" parameterType="RoleQueryVo" resultMap="BaseResultMap">
+        select role_id, role_desc, role_str, createAt, updateAt from role r
+        <include refid="query"></include>
+    </select>
+    <sql id="query">
+        <include refid="query_no_limit"></include>
+        <if test="start!=null and count!=null">
+            limit ${start},${count}
+        </if>
+    </sql>
+    <sql id="query_no_limit">
+        <where>
+            <if test="role!=null">
+                <if test="role.roleId!=null and role.roleId!=''">
+                    and r.role_id=#{role.roleId}
+                </if>
+                <if test="role.roleStr!=null and role.roleStr!=''">
+                    and r.role_str like '${role.roleStr}%'
+                </if>
+                <if test="role.roleDesc!=null and role.roleDesc!=''">
+                    and r.role_desc like '${role.roleDesc}%'
+                </if>
+            </if>
+        </where>
+    </sql>
+    <select id="getRoleCountByQueryVo" parameterType="RoleQueryVo" resultType="integer">
+        select count(*) from role r
+        <include refid="query_no_limit"></include>
+    </select>
+</mapper>

@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzk.bitbyte.mapper.AccessMapper">
+  <resultMap id="BaseResultMap" type="com.zzk.bitbyte.po.Access">
+    <id column="access_id" jdbcType="INTEGER" property="accessId" />
+    <result column="access_ip" jdbcType="VARCHAR" property="accessIp" />
+    <result column="access_time" jdbcType="TIMESTAMP" property="accessTime" />
+    <result column="access_type" jdbcType="INTEGER" property="accessType" />
+    <result column="access_value" jdbcType="INTEGER" property="accessValue" />
+    <result column="createAt" jdbcType="TIMESTAMP" property="createat" />
+    <result column="updateAt" jdbcType="TIMESTAMP" property="updateat" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    access_id, access_ip, access_time, access_type, access_value, createAt, updateAt
+  </sql>
+  <select id="selectByExample" parameterType="com.zzk.bitbyte.po.AccessExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from access
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from access
+    where access_id = #{accessId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from access
+    where access_id = #{accessId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zzk.bitbyte.po.AccessExample">
+    delete from access
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zzk.bitbyte.po.Access">
+    insert into access (access_id, access_ip, access_time, 
+      access_type, access_value, createAt, 
+      updateAt)
+    values (#{accessId,jdbcType=INTEGER}, #{accessIp,jdbcType=VARCHAR}, #{accessTime,jdbcType=TIMESTAMP}, 
+      #{accessType,jdbcType=INTEGER}, #{accessValue,jdbcType=INTEGER}, #{createat,jdbcType=TIMESTAMP}, 
+      #{updateat,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zzk.bitbyte.po.Access">
+    insert into access
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="accessId != null">
+        access_id,
+      </if>
+      <if test="accessIp != null">
+        access_ip,
+      </if>
+      <if test="accessTime != null">
+        access_time,
+      </if>
+      <if test="accessType != null">
+        access_type,
+      </if>
+      <if test="accessValue != null">
+        access_value,
+      </if>
+      <if test="createat != null">
+        createAt,
+      </if>
+      <if test="updateat != null">
+        updateAt,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="accessId != null">
+        #{accessId,jdbcType=INTEGER},
+      </if>
+      <if test="accessIp != null">
+        #{accessIp,jdbcType=VARCHAR},
+      </if>
+      <if test="accessTime != null">
+        #{accessTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="accessType != null">
+        #{accessType,jdbcType=INTEGER},
+      </if>
+      <if test="accessValue != null">
+        #{accessValue,jdbcType=INTEGER},
+      </if>
+      <if test="createat != null">
+        #{createat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateat != null">
+        #{updateat,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zzk.bitbyte.po.AccessExample" resultType="java.lang.Long">
+    select count(*) from access
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update access
+    <set>
+      <if test="record.accessId != null">
+        access_id = #{record.accessId,jdbcType=INTEGER},
+      </if>
+      <if test="record.accessIp != null">
+        access_ip = #{record.accessIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accessTime != null">
+        access_time = #{record.accessTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.accessType != null">
+        access_type = #{record.accessType,jdbcType=INTEGER},
+      </if>
+      <if test="record.accessValue != null">
+        access_value = #{record.accessValue,jdbcType=INTEGER},
+      </if>
+      <if test="record.createat != null">
+        createAt = #{record.createat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateat != null">
+        updateAt = #{record.updateat,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update access
+    set access_id = #{record.accessId,jdbcType=INTEGER},
+      access_ip = #{record.accessIp,jdbcType=VARCHAR},
+      access_time = #{record.accessTime,jdbcType=TIMESTAMP},
+      access_type = #{record.accessType,jdbcType=INTEGER},
+      access_value = #{record.accessValue,jdbcType=INTEGER},
+      createAt = #{record.createat,jdbcType=TIMESTAMP},
+      updateAt = #{record.updateat,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzk.bitbyte.po.Access">
+    update access
+    <set>
+      <if test="accessIp != null">
+        access_ip = #{accessIp,jdbcType=VARCHAR},
+      </if>
+      <if test="accessTime != null">
+        access_time = #{accessTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="accessType != null">
+        access_type = #{accessType,jdbcType=INTEGER},
+      </if>
+      <if test="accessValue != null">
+        access_value = #{accessValue,jdbcType=INTEGER},
+      </if>
+      <if test="createat != null">
+        createAt = #{createat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateat != null">
+        updateAt = #{updateat,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where access_id = #{accessId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zzk.bitbyte.po.Access">
+    update access
+    set access_ip = #{accessIp,jdbcType=VARCHAR},
+      access_time = #{accessTime,jdbcType=TIMESTAMP},
+      access_type = #{accessType,jdbcType=INTEGER},
+      access_value = #{accessValue,jdbcType=INTEGER},
+      createAt = #{createat,jdbcType=TIMESTAMP},
+      updateAt = #{updateat,jdbcType=TIMESTAMP}
+    where access_id = #{accessId,jdbcType=INTEGER}
+  </update>
+</mapper>

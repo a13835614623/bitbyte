@@ -1,0 +1,67 @@
+server:
+  port: 8888 #端口号
+spring:
+  profiles:
+    active: dev
+  application:
+    name: bitbyte-config
+  cloud:
+    config:
+      server:
+        git:
+          uri: git@gitee.com:zzk4513/bitbyte-config.git
+          ignore-local-ssh-settings: true
+          private-key: |
+                        -----BEGIN RSA PRIVATE KEY-----
+                        MIIEowIBAAKCAQEA+BdCoGP/5RHScja+NMLkruwEH1LL59giM5YTkA7yXIlGsiy7
+                        UmnzHthfi+xg2PUqKgclHIf7j1nRYoI/uJBBHtLPWCgummMxxyOGuMvXXhTXXcX1
+                        3ZROSU2UHdVbywRUJVbCYb9h1Dw3h66EFA72ZOfzzc5547Dp3bmU1FRQPa8E+Px7
+                        edbamlSUZnGGOy/o/b0ntY+1LFnmIwt8kMFWmpDkIkBkqmmVF98bdcSxS3Fh4f/7
+                        FlNpsfT/6Tdrl5YuRs7RRcwCfcw1oTH0qhllX+rX+qONRKx8H8TfE8DwA8Ds7RFA
+                        gWfOcPuKqQhaqkbpcWsZ5bSE/89VsZ8743oa6wIDAQABAoIBACzMNnGz3O9GKpQJ
+                        Iotwbc7QO2ZUkxFIS9S40st+h3ECMMvXm/Ojwgzd0VL42fwTOQvhwmfGfjxCYbbC
+                        AjOXiMrCEkK+7rteEgz9c0RHOpp4dPMv3denAgPmiEpiznJ4U6FyayMvZcDnJrfP
+                        YXYlxYQvBi0xjXz54yDwc9lraBna96yEmlb+mkrAhkM+eDrWFQLvyd78tBvC405X
+                        P8OC400CcHOKRltXmrGgOXrYdmPOinFJAm9MWHH+WkO20uIrbT1vqL3IpbZmqalE
+                        MY7mc9baJW5YAmd2NPF7K6YbE6f9B1TpQA1OLKpRqDCEIhpxceoz3WO8Exs6FbQL
+                        In7f6XECgYEA/jDn487MkM0K14UXyJr4pqQiYZGBbwwL6bOPMD5y9J01uLgAyG5w
+                        T8ydZ2n1cyMYND2zuN5QLJBKjB2PyvaELuK75s8IWm5l2vZzz8IftPEwkRv36DJC
+                        gXojqYYqjWZXF/J57cbJzGphaVorxsR8Yzf7K9QIRDut5yuC+16BxTUCgYEA+ds9
+                        rQGuD/hn3ya7Zs7DLplcMfDcUn1u2DIqsqCPC+/+KUCRg3OdEmM0qBTwktJcPqYV
+                        Z4zLpgrN96qToEL2O/GIEvjgOO65/AEaaTK8wX55+ooZZHH5OKcZKLgO4kRyBhYN
+                        SVQS6TljbpNuEKlyK0nh/FrusKo7dQ3bu2RtA58CgYB++S0MpcOX3WS6Dbi4s3jb
+                        vQeTl1yBfRICVniDT96ahGFOeVOiy0/8/Kfv/YTnU7OGfP/mq95+tEEYxreKWiPj
+                        S80y2V5B1f25J/zn3f96ojRxd/gZG+oOxVVFHEjrQyDkTHJNrUwmeUlZl/pgGsxL
+                        v64O0aajdvBCloCiUi4etQKBgEDjSzUvBoFnRbKSYIDmmZH0ihj+MHnL0YmcHbKe
+                        OAgln6AfAKtezyADW517Mq8uqn4qq8xkqE7K54q2Zfhs633N0ET9FV4zwWFM+Arx
+                        /ktSCWOjkcygPNUVsFb+1f61P9eMyo6Mowymtsf0ydTR7LCJU4MyKmL/Esnne3VD
+                        M3yJAoGBANtFS+AIHMVDvk67+tMBoVfMVE7amstPKKoEG+pHJ6b0T9TC7YAfxK5x
+                        +Yk+/LlLhc3ucBaQu4a/QpHoE9Uebg7W2boFJHaz3wZNhjIqm81Nc0NyKEghP/El
+                        VxpBAdldQd0V93r70CWyZuUFDiNxSHNyUigbG9sGLwj3A0NGoNgt
+                        -----END RSA PRIVATE KEY-----
+
+info:
+  app.name: bitbyte
+  company.name: www.bitbyte.com
+  build.artifactId: $project.artifactId$
+  build.version: $project.version$
+---
+spring:
+  profiles: dev
+eureka:
+  client: #客户端注册进eureka服务列表内
+    service-url:
+      defaultZone: http://127.0.0.1:7001/eureka/
+  instance:
+    instance-id: bitbyte-config8888 #自定义服务名称信息
+    prefer-ip-address: true #访问路径可以显示IP地址
+---
+spring:
+  profiles: prod
+eureka:
+  client: #客户端注册进eureka服务列表内
+    service-url:
+      defaultZone: http://106.13.127.37:7001/eureka/
+  instance:
+    instance-id: bitbyte-config8888 #自定义服务名称信息
+    prefer-ip-address: true #访问路径可以显示IP地址

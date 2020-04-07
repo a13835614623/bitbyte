@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzk.bitbyte.mapper.CommentReplyMapper">
+    <resultMap id="BaseResultMap" type="com.zzk.bitbyte.po.CommentReply">
+        <id column="reply_comment_floor" jdbcType="DECIMAL" property="replyCommentFloor"/>
+        <id column="reply_comment_article" jdbcType="VARCHAR" property="replyCommentArticle"/>
+        <id column="reply_floor" jdbcType="DECIMAL" property="replyFloor"/>
+        <result column="from_user_name" jdbcType="VARCHAR" property="fromUserName"/>
+        <result column="from_user_id" jdbcType="VARCHAR" property="fromUserId"/>
+        <result column="to_user_name" jdbcType="VARCHAR" property="toUserName"/>
+        <result column="to_user_id" jdbcType="VARCHAR" property="toUserId"/>
+        <result column="reply_content" jdbcType="VARCHAR" property="replyContent"/>
+        <result column="reply_time" jdbcType="TIMESTAMP" property="replyTime"/>
+        <result column="createAt" jdbcType="TIMESTAMP" property="createat"/>
+        <result column="updateAt" jdbcType="TIMESTAMP" property="updateat"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+        reply_comment_floor, reply_comment_article, reply_floor, from_user_name, from_user_id,
+    to_user_name, to_user_id, reply_content, reply_time, createAt, updateAt
+    </sql>
+    <select id="selectByExample" parameterType="com.zzk.bitbyte.po.CommentReplyExample" resultMap="BaseResultMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from comment_reply
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" parameterType="com.zzk.bitbyte.po.CommentReplyKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from comment_reply
+        where reply_comment_floor = #{replyCommentFloor,jdbcType=DECIMAL}
+        and reply_comment_article = #{replyCommentArticle,jdbcType=VARCHAR}
+        and reply_floor = #{replyFloor,jdbcType=DECIMAL}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.zzk.bitbyte.po.CommentReplyKey">
+        delete
+        from comment_reply
+        where reply_comment_floor = #{replyCommentFloor,jdbcType=DECIMAL}
+          and reply_comment_article = #{replyCommentArticle,jdbcType=VARCHAR}
+          and reply_floor = #{replyFloor,jdbcType=DECIMAL}
+    </delete>
+    <delete id="deleteByExample" parameterType="com.zzk.bitbyte.po.CommentReplyExample">
+        delete from comment_reply
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.zzk.bitbyte.po.CommentReply">
+        insert into comment_reply (reply_comment_floor, reply_comment_article,
+                                   reply_floor, from_user_name, from_user_id,
+                                   to_user_name, to_user_id, reply_content,
+                                   reply_time, createAt, updateAt)
+        values (#{replyCommentFloor,jdbcType=DECIMAL}, #{replyCommentArticle,jdbcType=VARCHAR},
+                #{replyFloor,jdbcType=DECIMAL}, #{fromUserName,jdbcType=VARCHAR}, #{fromUserId,jdbcType=VARCHAR},
+                #{toUserName,jdbcType=VARCHAR}, #{toUserId,jdbcType=VARCHAR}, #{replyContent,jdbcType=VARCHAR},
+                #{replyTime,jdbcType=TIMESTAMP}, #{createat,jdbcType=TIMESTAMP}, #{updateat,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.zzk.bitbyte.po.CommentReply">
+        insert into comment_reply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="replyCommentFloor != null">
+                reply_comment_floor,
+            </if>
+            <if test="replyCommentArticle != null">
+                reply_comment_article,
+            </if>
+            <if test="replyFloor != null">
+                reply_floor,
+            </if>
+            <if test="fromUserName != null">
+                from_user_name,
+            </if>
+            <if test="fromUserId != null">
+                from_user_id,
+            </if>
+            <if test="toUserName != null">
+                to_user_name,
+            </if>
+            <if test="toUserId != null">
+                to_user_id,
+            </if>
+            <if test="replyContent != null">
+                reply_content,
+            </if>
+            <if test="replyTime != null">
+                reply_time,
+            </if>
+            <if test="createat != null">
+                createAt,
+            </if>
+            <if test="updateat != null">
+                updateAt,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="replyCommentFloor != null">
+                #{replyCommentFloor,jdbcType=DECIMAL},
+            </if>
+            <if test="replyCommentArticle != null">
+                #{replyCommentArticle,jdbcType=VARCHAR},
+            </if>
+            <if test="replyFloor != null">
+                #{replyFloor,jdbcType=DECIMAL},
+            </if>
+            <if test="fromUserName != null">
+                #{fromUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="fromUserId != null">
+                #{fromUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="toUserName != null">
+                #{toUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="toUserId != null">
+                #{toUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="replyContent != null">
+                #{replyContent,jdbcType=VARCHAR},
+            </if>
+            <if test="replyTime != null">
+                #{replyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createat != null">
+                #{createat,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateat != null">
+                #{updateat,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.zzk.bitbyte.po.CommentReplyExample" resultType="java.lang.Long">
+        select count(*) from comment_reply
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update comment_reply
+        <set>
+            <if test="record.replyCommentFloor != null">
+                reply_comment_floor = #{record.replyCommentFloor,jdbcType=DECIMAL},
+            </if>
+            <if test="record.replyCommentArticle != null">
+                reply_comment_article = #{record.replyCommentArticle,jdbcType=VARCHAR},
+            </if>
+            <if test="record.replyFloor != null">
+                reply_floor = #{record.replyFloor,jdbcType=DECIMAL},
+            </if>
+            <if test="record.fromUserName != null">
+                from_user_name = #{record.fromUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="record.fromUserId != null">
+                from_user_id = #{record.fromUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.toUserName != null">
+                to_user_name = #{record.toUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="record.toUserId != null">
+                to_user_id = #{record.toUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.replyContent != null">
+                reply_content = #{record.replyContent,jdbcType=VARCHAR},
+            </if>
+            <if test="record.replyTime != null">
+                reply_time = #{record.replyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.createat != null">
+                createAt = #{record.createat,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.updateat != null">
+                updateAt = #{record.updateat,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update comment_reply
+        set reply_comment_floor = #{record.replyCommentFloor,jdbcType=DECIMAL},
+        reply_comment_article = #{record.replyCommentArticle,jdbcType=VARCHAR},
+        reply_floor = #{record.replyFloor,jdbcType=DECIMAL},
+        from_user_name = #{record.fromUserName,jdbcType=VARCHAR},
+        from_user_id = #{record.fromUserId,jdbcType=VARCHAR},
+        to_user_name = #{record.toUserName,jdbcType=VARCHAR},
+        to_user_id = #{record.toUserId,jdbcType=VARCHAR},
+        reply_content = #{record.replyContent,jdbcType=VARCHAR},
+        reply_time = #{record.replyTime,jdbcType=TIMESTAMP},
+        createAt = #{record.createat,jdbcType=TIMESTAMP},
+        updateAt = #{record.updateat,jdbcType=TIMESTAMP}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zzk.bitbyte.po.CommentReply">
+        update comment_reply
+        <set>
+            <if test="fromUserName != null">
+                from_user_name = #{fromUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="fromUserId != null">
+                from_user_id = #{fromUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="toUserName != null">
+                to_user_name = #{toUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="toUserId != null">
+                to_user_id = #{toUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="replyContent != null">
+                reply_content = #{replyContent,jdbcType=VARCHAR},
+            </if>
+            <if test="replyTime != null">
+                reply_time = #{replyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createat != null">
+                createAt = #{createat,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateat != null">
+                updateAt = #{updateat,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where reply_comment_floor = #{replyCommentFloor,jdbcType=DECIMAL}
+        and reply_comment_article = #{replyCommentArticle,jdbcType=VARCHAR}
+        and reply_floor = #{replyFloor,jdbcType=DECIMAL}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.zzk.bitbyte.po.CommentReply">
+        update comment_reply
+        set from_user_name = #{fromUserName,jdbcType=VARCHAR},
+            from_user_id   = #{fromUserId,jdbcType=VARCHAR},
+            to_user_name   = #{toUserName,jdbcType=VARCHAR},
+            to_user_id     = #{toUserId,jdbcType=VARCHAR},
+            reply_content  = #{replyContent,jdbcType=VARCHAR},
+            reply_time     = #{replyTime,jdbcType=TIMESTAMP},
+            createAt       = #{createat,jdbcType=TIMESTAMP},
+            updateAt       = #{updateat,jdbcType=TIMESTAMP}
+        where reply_comment_floor = #{replyCommentFloor,jdbcType=DECIMAL}
+          and reply_comment_article = #{replyCommentArticle,jdbcType=VARCHAR}
+          and reply_floor = #{replyFloor,jdbcType=DECIMAL}
+    </update>
+</mapper>

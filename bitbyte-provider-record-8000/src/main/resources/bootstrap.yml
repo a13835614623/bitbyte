@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    active: prod
+---
+spring:
+  profiles: dev
+  cloud:
+    config:
+      name: record,db
+      uri: http://127.0.0.1:8888
+      profile: dev
+---
+spring:
+  profiles: prod
+  cloud:
+    config:
+      name: record,db
+      uri: http://106.13.127.37:8888
+      profile: prod

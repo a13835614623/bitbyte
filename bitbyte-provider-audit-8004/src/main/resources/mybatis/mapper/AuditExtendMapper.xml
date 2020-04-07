@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzk.bitbyte.mapper.AuditExtendMapper">
+    <resultMap id="BaseResultMap" type="com.zzk.bitbyte.po.extend.AuditExtend">
+        <id column="audit_id" jdbcType="VARCHAR" property="auditId"/>
+        <result column="audit_article" jdbcType="VARCHAR" property="auditArticle"/>
+        <result column="audit_state" jdbcType="INTEGER" property="auditState"/>
+        <result column="audit_reason" jdbcType="VARCHAR" property="auditReason"/>
+        <result column="audit_more" jdbcType="VARCHAR" property="auditMore"/>
+        <result column="audit_user" jdbcType="VARCHAR" property="auditUser"/>
+        <result column="audit_time" jdbcType="TIMESTAMP" property="auditTime"/>
+        <result column="createAt" jdbcType="TIMESTAMP" property="createat"/>
+        <result column="updateAt" jdbcType="TIMESTAMP" property="updateat"/>
+        <association property="article" javaType="com.zzk.bitbyte.po.extend.ArticleExtend">
+            <id column="article_id" jdbcType="VARCHAR" property="articleId"/>
+            <result column="article_state" jdbcType="INTEGER" property="articleState"/>
+            <result column="article_title" jdbcType="VARCHAR"
+                    property="articleTitle"/>
+            <result column="article_user" jdbcType="VARCHAR"
+                    property="articleUser"/>
+            <result column="article_read" jdbcType="DECIMAL"
+                    property="articleRead"/>
+            <result column="article_publish_time" jdbcType="TIMESTAMP"
+                    property="articlePublishTime"/>
+            <result column="article_tags" jdbcType="VARCHAR"
+                    property="articleTags"/>
+            <result column="article_part" jdbcType="INTEGER" property="articlePart"/>
+            <!-- 作者昵称 -->
+            <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+            <!-- 作者头像 -->
+            <result column="user_pic" jdbcType="VARCHAR" property="userPic"/>
+        </association>
+    </resultMap>
+
+    <sql id="select_from_sql">
+        select aa.audit_id,
+               aa.audit_article,
+               aa.audit_state,
+               aa.audit_reason,
+               aa.audit_more,
+               aa.audit_user,
+               aa.audit_time,
+               aa.createAt,
+               aa.updateAt,
+               a.article_user,
+               a.article_tags,
+               a.article_part,
+               a.article_title,
+               a.article_content,
+               a.article_state,
+               a.article_md_content,
+               a.article_read,
+               a.article_publish_time,
+               u.user_name,
+               u.user_pic
+        from audit aa
+                 left join article a on aa.audit_article = a.article_id
+                 left join user u on a.article_user = u.user_id
+    </sql>
+    <sql id="query_sql">
+        <where>
+            <if test="audit!=null">
+                <if test="audit.auditId!=null and audit.audit!=''">
+                    and aa.audit_id = #{audit.auditId}
+                </if>
+                <if test="audit.auditState!=null">
+                    and aa.audit_state = #{audit.auditState}
+                </if>
+                <if test="audit.auditArticle!=null and audit.auditArticle!=''">
+                    and aa.audit_article = #{audit.auditArticle}
+                </if>
+                <if test="audit.auditUser!=null and audit.auditUser!=''">
+                    and aa.audit_user = #{audit.auditUser}
+                </if>
+            </if>
+            <if test="articlePart!=null">
+                and a.article_part=#{articlePart}
+            </if>
+            <if test="articleSubmitTimeStart!=null">
+                and date_format(aa.createAt,'%Y-%m-%d')>= #{articleSubmitTimeStart}
+            </if>
+            <if test="articleSubmitTimeEnd!=null">
+                and date_format(aa.createAt,'%Y-%m-%d')&lt;= #{articleSubmitTimeEnd}
+            </if>
+        </where>
+    </sql>
+    <sql id="limit">
+        <if test="start!=null and count!=null">
+            limit #{start},#{count}
+        </if>
+    </sql>
+    <!--  根据查询对象查询审核列表  -->
+    <select id="getAuditListByQueryVo" parameterType="AuditQueryVo" resultMap="BaseResultMap">
+        <include refid="select_from_sql"></include>
+        <include refid="query_sql"></include>
+        <include refid="limit"></include>
+    </select>
+    <!--    根据查询对象查询审核数量-->
+    <select id="getAuditCountByQueryVo" parameterType="AuditQueryVo" resultType="Integer">
+        select count(aa.audit_id)
+        from audit aa left join article a on aa.audit_article = a.article_id
+        left join user u on a.article_user = u.user_id
+        <include refid="query_sql"></include>
+    </select>
+    <!--   根据审核id获取审核扩展数据 -->
+    <select id="getAuditExtendByAuditId" parameterType="String" resultMap="BaseResultMap">
+        <include refid="select_from_sql"></include>
+        where aa.audit_id=#{auditId}
+    </select>
+</mapper>

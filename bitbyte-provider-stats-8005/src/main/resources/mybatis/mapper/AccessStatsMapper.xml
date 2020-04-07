@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzk.bitbyte.mapper.AccessStatsMapper">
+
+    <!--    根据查询对象获取访问数据-->
+    <select id="getAccessStatsListByQueryVo" parameterType="AccessStatsQueryVo" resultType="AccessStats">
+        select
+        <if test="isGroupByAccessTime">
+            date_format(access_time, #{dateFormat}) as time,
+        </if>
+        <if test="isGroupByAccessType">
+            access_type as type,
+        </if>
+        <if test="isGroupByAccessValue">
+            access_value as value,
+        </if>
+        count(distinct access_ip) as peopleNum,
+        count(access_id) as count
+        from access
+        <if test="accessTimeStart!=null or accessTimeEnd!=null">
+            <where>
+                <if test="accessTimeStart!=null">
+                    and access_time>=#{accessTimeStart}
+                </if>
+                <if test="accessTimeEnd!=null">
+                    and access_time &lt;=#{accessTimeEnd}
+                </if>
+            </where>
+        </if>
+        <if test="isGroupByAccessTime or isGroupByAccessType or isGroupByAccessValue">
+            group by
+            <trim suffixOverrides=",">
+                <if test="isGroupByAccessTime">
+                    time,
+                </if>
+                <if test="isGroupByAccessType">
+                    type,
+                </if>
+                <if test="isGroupByAccessValue">
+                    value,
+                </if>
+            </trim>
+        </if>
+    </select>
+</mapper>

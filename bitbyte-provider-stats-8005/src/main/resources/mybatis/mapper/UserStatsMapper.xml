@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzk.bitbyte.mapper.UserStatsMapper">
+
+    <!--  根据查询对象,获取博客统计数据-->
+    <select id="getUserStatsListByQueryVo" parameterType="UserStatsQueryVo" resultType="UserStats">
+        SELECT
+        <if test="isGroupBySex">
+            user_sex AS sex,
+        </if>
+        <if test="isGroupByRegTime">
+            DATE_FORMAT(createAt, #{dateFormat}) AS regTime,
+        </if>
+        COUNT(*) AS count
+        FROM user
+        <where>
+            <if test="regTimeStart!=null">
+                AND createAt >=#{regTimeStart}
+            </if>
+            <if test="regTimeEnd!=null">
+                AND createAt &lt;=#{regTimeEnd}
+            </if>
+        </where>
+        <if test="isGroupByRegTime or isGroupBySex">
+            GROUP BY
+            <trim suffixOverrides=",">
+                <if test="isGroupBySex">
+                    sex,
+                </if>
+                <if test="isGroupByRegTime">
+                    regTime
+                </if>
+            </trim>
+        </if>
+    </select>
+</mapper>

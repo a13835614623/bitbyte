@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzk.bitbyte.mapper.ArticleExtendMapper">
+    <!-- 基础文章信息，不包括文章内容 -->
+    <resultMap id="BaseArticle" type="com.zzk.bitbyte.po.Article">
+        <id column="article_id" jdbcType="VARCHAR" property="articleId"/>
+        <result column="article_state" jdbcType="INTEGER" property="articleState"/>
+        <result column="article_title" jdbcType="VARCHAR"
+                property="articleTitle"/>
+        <result column="article_user" jdbcType="VARCHAR"
+                property="articleUser"/>
+        <result column="article_read" jdbcType="DECIMAL"
+                property="articleRead"/>
+        <result column="article_publish_time" jdbcType="TIMESTAMP"
+                property="articlePublishTime"/>
+        <result column="article_tags" jdbcType="VARCHAR"
+                property="articleTags"/>
+        <result column="article_part" jdbcType="INTEGER" property="articlePart"/>
+    </resultMap>
+    <resultMap extends="BaseArticle" id="BaseArticleWithAuthor"
+               type="com.zzk.bitbyte.po.ArticleWithBLOBs">
+        <!-- 作者昵称 -->
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <!-- 作者头像 -->
+        <result column="user_pic" jdbcType="VARCHAR" property="userPic"/>
+    </resultMap>
+    <resultMap extends="BaseArticle" id="BaseArticleWithContent"
+               type="com.zzk.bitbyte.po.ArticleWithBLOBs">
+        <result column="article_content" jdbcType="LONGVARCHAR"
+                property="articleContent"/>
+        <result column="article_md_content" jdbcType="LONGVARCHAR"
+                property="articleMdContent"/>
+    </resultMap>
+    <!-- 文章以及作者信息 -->
+    <resultMap extends="BaseArticleWithContent" id="ArticleWithAuthorAndContent"
+               type="com.zzk.bitbyte.po.extend.ArticleExtend">
+        <!-- 作者昵称 -->
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <!-- 作者头像 -->
+        <result column="user_pic" jdbcType="VARCHAR" property="userPic"/>
+    </resultMap>
+    <sql id="article_columns_no_content">
+        a.article_id,
+               a.article_user,
+               a.article_tags,
+               a.article_part,
+               a.article_state,
+               a.article_title,
+               a.article_read,
+               a.article_publish_time,
+               u.user_name,
+               u.user_pic
+    </sql>
+    <sql id="article_columns_with_content">
+        a.article_id,
+               a.article_user,
+               a.article_tags,
+               a.article_part,
+               a.article_state,
+               a.article_title,
+               a.article_content,
+               a.article_md_content,
+               a.article_read,
+               a.article_publish_time,
+               u.user_name,
+               u.user_pic
+    </sql>
+    <!--    查询文章作者携带内容-->
+    <sql id="select_article_author_content">
+        SELECT
+        <include refid="article_columns_with_content"/>
+        FROM user AS u,
+        article AS a
+    </sql>
+    <!--    查询文章作者不带内容-->
+    <sql id="select_article_author">
+        SELECT
+        <include refid="article_columns_no_content"/>
+        FROM user AS u,
+        article AS a
+    </sql>
+    <sql id="where_query_sql">
+        <if test="article!=null">
+            <if test="article.articleUser!=null and article.articleUser!=''">
+                AND a.article_user=#{article.articleUser}
+            </if>
+            <if test="article.articlePart!=null">
+                AND a.article_part=#{article.articlePart}
+            </if>
+            <if test="article.articleState!=null">
+                AND a.article_state=#{article.articleState}
+            </if>
+            <if test="article.articleId!=null and article.articleId!=''">
+                AND a.article_id=#{article.articleId}
+            </if>
+            <if test="article.articleTitle!=null and article.articleTitle!=''">
+                AND a.article_title like '%${article.articleTitle}%'
+            </if>
+            <if test="article.userName!=null and article.userName!=''">
+                AND u.user_name like '%${article.userName}%'
+            </if>
+            <if test="articlePublishStart!=null">
+                AND a.article_publish_time >= #{articlePublishStart}
+            </if>
+            <if test="articlePublishEnd!=null">
+                AND a.article_publish_time &lt;= #{articlePublishEnd}
+            </if>
+        </if>
+    </sql>
+
+    <!-- 通过文章ID查找文章及其作者+内容信息 -->
+    <select id="findArticleExtendById" parameterType="String"
+            resultMap="ArticleWithAuthorAndContent">
+        <include refid="select_article_author_content"/>
+        WHERE a.article_id=#{articleId}
+        AND
+        a.article_user=u.user_id
+    </select>
+    <!--    根据文章ID查询文章以及作者-->
+    <select id="findArticleWithAuthorById" parameterType="String" resultMap="BaseArticleWithAuthor">
+        <include refid="select_article_author"/>
+        where a.article_id=#{articleId}
+    </select>
+    <!--    获取随机文章ID-->
+    <select id="findRandomArticleIdWithAuthor" parameterType="Integer" resultType="String">
+        select a.article_id
+        FROM article a
+        WHERE a.article_id >= (
+        SELECT floor(RAND() * ((SELECT MAX(article_id) FROM article)-(SELECT MIN(article_id) FROM article))
+        +(SELECT MIN(article_id) FROM article)))
+        LIMIT #{num}
+    </select>
+
+    <!--    通过查询对象获取文章-->
+    <select id="findArticleAndAuthorByQueryVo" parameterType="ArticleQueryVo"
+            resultMap="ArticleWithAuthorAndContent">
+        <include refid="select_article_author"/>
+        <where>
+            <include refid="where_query_sql"/>
+            AND a.article_user=u.user_id
+            order by a.article_publish_time DESC
+        </where>
+        <if test="start!=null and count!=null">
+            LIMIT #{start},#{count}
+        </if>
+    </select>
+    <!--    通过查询对象查询文章数量-->
+    <select id="findArticleCountByQueryVo" parameterType="articleQueryVo" resultType="integer">
+        select count(*) from article a
+        <where>
+            <include refid="where_query_sql"/>
+        </where>
+    </select>
+    <!--    查询用户最新关注文章-->
+    <select id="findLatestSubArticleAndAuthorByUserId" parameterType="String"
+            resultMap="ArticleWithAuthorAndContent">
+        SELECT
+        <include refid="article_columns_no_content"/>
+        FROM user AS u,
+        article AS a,
+        subscribe AS sub
+        where sub.sub_user_child = #{userId}
+        AND a.article_user = u.user_id
+        AND sub.sub_user_parent = u.user_id
+        order by a.article_publish_time DESC
+        LIMIT 0,5
+    </select>
+
+    <!--    批量更新阅读量-->
+    <update id="updateArticleRead" parameterType="List">
+        update article
+        set article_read=
+        <foreach collection="list" item="item" index="index"
+                 separator=" " open="case article_id" close="end">
+            when #{item.articleId} then #{item.articleRead}
+        </foreach>
+        where article_id in
+        <foreach collection="list" index="index" item="item"
+                 separator="," open="(" close=")">
+            #{item.articleId}
+        </foreach>
+    </update>
+</mapper>

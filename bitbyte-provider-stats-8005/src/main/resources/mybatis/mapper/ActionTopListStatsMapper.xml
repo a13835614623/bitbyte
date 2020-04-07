@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzk.bitbyte.mapper.ActionTopListStatsMapper">
+    <!-- 基础文章信息，不包括文章内容 -->
+    <resultMap id="ArticleResultMap" type="com.zzk.bitbyte.po.Article">
+        <id column="article_id" jdbcType="VARCHAR" property="articleId"/>
+        <result column="article_title" jdbcType="VARCHAR"
+                property="articleTitle"/>
+        <result column="article_user" jdbcType="VARCHAR"
+                property="articleUser"/>
+        <result column="article_read" jdbcType="DECIMAL"
+                property="articleRead"/>
+        <result column="article_publish_time" jdbcType="TIMESTAMP"
+                property="articlePublishTime"/>
+        <result column="article_tags" jdbcType="VARCHAR"
+                property="articleTags"/>
+        <result column="article_part" jdbcType="INTEGER" property="articlePart"/>
+    </resultMap>
+    <!-- 文章以及作者信息 -->
+    <resultMap id="ArticleExtendResultMap" extends="ArticleResultMap"
+               type="com.zzk.bitbyte.po.extend.ArticleExtend">
+        <!-- 作者昵称 -->
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <!-- 作者头像 -->
+        <result column="user_pic" jdbcType="VARCHAR" property="userPic"/>
+        <!--博客点赞数-->
+        <result column="article_like_num" jdbcType="INTEGER" property="articleLikeNum"/>
+        <!--博客评论数-->
+        <result column="article_comment_num" jdbcType="INTEGER" property="articleCommentNum"/>
+    </resultMap>
+
+    <resultMap id="UserResultMap" type="com.zzk.bitbyte.po.extend.UserExtend">
+        <id column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="user_sex" jdbcType="VARCHAR" property="userSex"/>
+        <result column="user_mobile" jdbcType="VARCHAR" property="userMobile"/>
+        <result column="user_birthday" jdbcType="DATE" property="userBirthday"/>
+        <result column="user_address" jdbcType="VARCHAR"
+                property="userAddress"/>
+        <result column="user_password" jdbcType="VARCHAR"
+                property="userPassword"/>
+        <result column="user_email" jdbcType="VARCHAR" property="userEmail"/>
+        <result column="fans_num" jdbcType="INTEGER" property="fansNum"/>
+        <result column="user_pic" jdbcType="VARCHAR" property="userPic"/>
+    </resultMap>
+    <!--  获取用户粉丝数排行榜-->
+    <select id="getFansNumTopUserList" parameterType="FansTopListStatsQueryVo" resultMap="UserResultMap">
+        SELECT u2.user_id,
+               u2.user_name,
+               u2.user_sex,
+               u2.user_mobile,
+               u2.user_birthday,
+               u2.user_address,
+               u2.user_email,
+               u2.user_pic,
+               count(sub_user_child) as fans_num
+        FROM user,
+             subscribe sub,
+             user u2
+        WHERE user.user_id = sub.sub_user_child
+          and u2.user_id = sub.sub_user_parent
+        group by sub.sub_user_parent
+        order by fans_num desc
+        <include refid="limit"></include>
+    </select>
+    
+    <sql id="article_query_sql">
+        <trim suffixOverrides="where">
+            <where>
+                <if test="publishTimeStart!=null">
+                    AND article_publish_time >=#{publishTimeStart}
+                </if>
+                <if test="publishTimeEnd!=null">
+                    AND article_publish_time &lt;=#{publishTimeEnd}
+                </if>
+                <if test="article!=null and article.articlePart!=null">
+                    AND article_part=#{article.articlePart}
+                </if>
+            </where>
+        </trim>
+    </sql>
+
+    <sql id="limit">
+        <if test="start!=count and count!=null">
+            limit #{start},#{count}
+        </if>
+    </sql>
+
+    <!--获取博客阅读量排行榜-->
+    <select id="getReadNumTopArticleList" parameterType="ActionTopListStatsQueryVo" resultMap="ArticleExtendResultMap">
+        select article_id,
+               article_title,
+               article_user,
+               article_read,
+               article_publish_time,
+               article_tags,
+               article_part,
+               user_name,
+               user_pic
+        from article
+                 left join user u on article.article_user = u.user_id
+        <include refid="article_query_sql"></include>
+        group by article_id
+        order by article_read desc
+        <include refid="limit"></include>
+    </select>
+
+    <!-- 获取博客点赞量排行榜-->
+    <select id="getLikeNumTopArticleList" parameterType="ActionTopListStatsQueryVo" resultMap="ArticleExtendResultMap">
+        select article_id,
+        article_title,
+        article_user,
+        article_read,
+        article_publish_time,
+        article_tags,
+        article_part,
+        user_name,
+        user_pic,
+        count(al.like_article) as article_like_num
+        from (article
+        left join user u on article.article_user = u.user_id)
+        left join article_like al on al.like_article = article.article_id
+        <include refid="article_query_sql"></include>
+        group by article_id
+        order by article_like_num desc
+        <include refid="limit"></include>
+    </select>
+
+    <!--获取博客评论排行榜-->
+    <select id="getCommentNumTopArticleList" parameterType="ActionTopListStatsQueryVo" resultMap="ArticleExtendResultMap">
+        select article_id,
+               article_title,
+               article_user,
+               article_read,
+               article_publish_time,
+               article_tags,
+               article_part,
+               user_name,
+               user_pic,
+               count(c.comment_article) as article_comment_num
+        from (article
+            left join user u on article.article_user = u.user_id)
+                 left join comment c on c.comment_article = article_id
+        <include refid="article_query_sql"></include>
+        group by article_id
+        order by article_comment_num desc
+        <include refid="limit"></include>
+    </select>
+
+
+    <!--获取互动榜-->
+    <select id="getActionNumTopArticleList" parameterType="ActionTopListStatsQueryVo"
+            resultMap="ArticleExtendResultMap">
+        select
+        <trim suffixOverrides=",">
+            article_id,
+            article_title,
+            article_user,
+            article_read,
+            article_publish_time,
+            article_tags,
+            article_part,
+            user_name,
+            user_pic,
+            <if test="isOrderByLikeNum">
+                count(al.like_article) as article_like_num,
+            </if>
+            <if test="isOrderByCommentNum">
+                count(c.comment_article) as article_comment_num
+            </if>
+        </trim>
+        from article
+        left join user u on article.article_user = u.user_id
+        <if test="isOrderByLikeNum">
+            left join article_like al on al.like_article = article.article_id
+        </if>
+        <if test="isOrderByCommentNum">
+            left join comment c on c.comment_article = article_id
+        </if>
+        group by article_id
+        <trim suffixOverrides=",">
+            order by
+            <if test="isOrderByCommentNum">
+                article_comment_num desc,
+            </if>
+            <if test="isOrderByLikeNum">
+                article_like_num desc,
+            </if>
+            <if test="isOrderByReadNum">
+                article_read desc
+            </if>
+        </trim>
+        <include refid="limit"></include>
+    </select>
+</mapper>

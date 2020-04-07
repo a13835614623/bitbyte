@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzk.bitbyte.mapper.NoticeExtendMapper">
+    <resultMap id="BaseResultMap" type="com.zzk.bitbyte.po.Notice">
+        <id column="notice_id" jdbcType="VARCHAR" property="noticeId"/>
+        <result column="notice_content" jdbcType="VARCHAR" property="noticeContent"/>
+        <result column="notice_time" jdbcType="TIMESTAMP" property="noticeTime"/>
+        <result column="notice_title" jdbcType="VARCHAR" property="noticeTitle"/>
+        <result column="notice_topic" jdbcType="VARCHAR" property="noticeTopic"/>
+        <result column="notice_publisher" jdbcType="VARCHAR" property="noticePublisher"/>
+        <result column="createAt" jdbcType="TIMESTAMP" property="createat"/>
+        <result column="updateAt" jdbcType="TIMESTAMP" property="updateat"/>
+    </resultMap>
+    <sql id="where">
+        <if test="notice!=null">
+            <where>
+                <if test="notice.noticeTopic!=null and notice.noticeTopic !=''">
+                    and notice_topic like '${notice.noticeTopic}%'
+                </if>
+                <if test="notice.noticePublisher!=null and notice.noticePublisher !=''">
+                    and notice_publisher like '${notice.noticePublisher}%'
+                </if>
+                <if test="notice.noticeTitle!=null and notice.noticeTitle !=''">
+                    and notice_title like '${notice.noticeTitle}%'
+                </if>
+                <if test="notice.noticeId!=null and notice.noticeId!=''">
+                    and notice_id = #{notice.noticeId}
+                </if>
+                <if test="noticeTopicList!=null">
+                    and notice_topic in
+                    <foreach collection="noticeTopicList" open=" ( " item="item" separator="," close=" ) ">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+        </if>
+    </sql>
+    <sql id="limit">
+        <if test="start!=null and count!=null">
+            limit #{start},#{count}
+        </if>
+    </sql>
+
+    <!--    根据查询对象查询notice-->
+    <select id="findNoticeListByQueryVo" parameterType="NoticeQueryVo" resultMap="BaseResultMap">
+        select notice_id,
+        notice_content,
+        notice_time,
+        notice_title,
+        notice_topic,
+        notice_publisher,
+        createAt,
+        updateAt
+        from notice
+        <include refid="where"></include>
+        <include refid="limit"></include>
+    </select>
+    <!--    根据查询对象查询notice数量-->
+    <select id="findNoticeCountByQueryVo" parameterType="NoticeQueryVo" resultType="Integer">
+        select count(notice_id)
+        from notice
+        <include refid="where"></include>
+    </select>
+</mapper>

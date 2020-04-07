@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzk.bitbyte.mapper.RecordExtendMapper">
+    <resultMap id="BaseResultMap" type="com.zzk.bitbyte.po.Record">
+        <id column="record_user" jdbcType="VARCHAR" property="recordUser"/>
+        <id column="record_time" jdbcType="TIMESTAMP" property="recordTime"/>
+        <result column="record_content" jdbcType="VARCHAR" property="recordContent"/>
+        <result column="createat" jdbcType="TIMESTAMP" property="createat"/>
+        <result column="updateat" jdbcType="TIMESTAMP" property="updateat"/>
+    </resultMap>
+    <select id="findRecordsByUserId" parameterType="string" resultMap="BaseResultMap">
+        select record_user, record_content, record_time, createat, updateat
+        from record
+        where record.record_user = #{userId}
+    </select>
+</mapper>

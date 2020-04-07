@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzk.bitbyte.mapper.UserPermissionMapper">
+  <resultMap id="BaseResultMap" type="com.zzk.bitbyte.po.UserPermission">
+    <id column="user_perm_id" jdbcType="VARCHAR" property="userPermId" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="pern_id" jdbcType="VARCHAR" property="pernId" />
+    <result column="createAt" jdbcType="TIMESTAMP" property="createat" />
+    <result column="updateAt" jdbcType="TIMESTAMP" property="updateat" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    user_perm_id, user_id, pern_id, createAt, updateAt
+  </sql>
+  <select id="selectByExample" parameterType="com.zzk.bitbyte.po.UserPermissionExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from user_permission
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user_permission
+    where user_perm_id = #{userPermId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from user_permission
+    where user_perm_id = #{userPermId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zzk.bitbyte.po.UserPermissionExample">
+    delete from user_permission
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zzk.bitbyte.po.UserPermission">
+    insert into user_permission (user_perm_id, user_id, pern_id, 
+      createAt, updateAt)
+    values (#{userPermId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{pernId,jdbcType=VARCHAR}, 
+      #{createat,jdbcType=TIMESTAMP}, #{updateat,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zzk.bitbyte.po.UserPermission">
+    insert into user_permission
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userPermId != null">
+        user_perm_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="pernId != null">
+        pern_id,
+      </if>
+      <if test="createat != null">
+        createAt,
+      </if>
+      <if test="updateat != null">
+        updateAt,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userPermId != null">
+        #{userPermId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="pernId != null">
+        #{pernId,jdbcType=VARCHAR},
+      </if>
+      <if test="createat != null">
+        #{createat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateat != null">
+        #{updateat,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zzk.bitbyte.po.UserPermissionExample" resultType="java.lang.Long">
+    select count(*) from user_permission
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update user_permission
+    <set>
+      <if test="record.userPermId != null">
+        user_perm_id = #{record.userPermId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pernId != null">
+        pern_id = #{record.pernId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createat != null">
+        createAt = #{record.createat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateat != null">
+        updateAt = #{record.updateat,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update user_permission
+    set user_perm_id = #{record.userPermId,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=VARCHAR},
+      pern_id = #{record.pernId,jdbcType=VARCHAR},
+      createAt = #{record.createat,jdbcType=TIMESTAMP},
+      updateAt = #{record.updateat,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zzk.bitbyte.po.UserPermission">
+    update user_permission
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="pernId != null">
+        pern_id = #{pernId,jdbcType=VARCHAR},
+      </if>
+      <if test="createat != null">
+        createAt = #{createat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateat != null">
+        updateAt = #{updateat,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where user_perm_id = #{userPermId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zzk.bitbyte.po.UserPermission">
+    update user_permission
+    set user_id = #{userId,jdbcType=VARCHAR},
+      pern_id = #{pernId,jdbcType=VARCHAR},
+      createAt = #{createat,jdbcType=TIMESTAMP},
+      updateAt = #{updateat,jdbcType=TIMESTAMP}
+    where user_perm_id = #{userPermId,jdbcType=VARCHAR}
+  </update>
+</mapper>

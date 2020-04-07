@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzk.bitbyte.mapper.SubscribeExtendMapper">
+    <resultMap id="BaseResultMap" type="com.zzk.bitbyte.po.Subscribe">
+        <id column="sub_user_child" jdbcType="VARCHAR" property="subUserChild"/>
+        <id column="sub_user_parent" jdbcType="VARCHAR" property="subUserParent"/>
+        <result column="sub_time" jdbcType="TIMESTAMP" property="subTime"/>
+        <result column="createAt" jdbcType="TIMESTAMP" property="createat"/>
+        <result column="updateAt" jdbcType="TIMESTAMP" property="updateat"/>
+    </resultMap>
+</mapper>
