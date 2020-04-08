@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.web.reactive.error.DefaultErrorWeb
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.reactive.function.server.*;
 
@@ -31,7 +32,7 @@ public class GateWayExceptionHandler extends DefaultErrorWebExceptionHandler {
             Throwable error = super.getError(request);
             if (error instanceof org.springframework.cloud.gateway.support.NotFoundException) {
                 code = HttpStatus.NOT_FOUND.value();
-            }else if(error instanceof AuthenticationException){
+            } if(error instanceof AuthenticationException){
                 code = HttpStatus.UNAUTHORIZED.value();
             }
             return response(code, this.buildMessage(request, error));
@@ -66,7 +67,11 @@ public class GateWayExceptionHandler extends DefaultErrorWebExceptionHandler {
         private String buildMessage(ServerRequest request, Throwable ex) {
             StringBuilder message = new StringBuilder();
             if (ex != null) {
-                message.append(ex.getMessage());
+                if(ex instanceof DisabledException){
+                    message.append("该用户不可用!");
+                }else {
+                    message.append(ex.getMessage());
+                }
             }
             return message.toString();
         }
