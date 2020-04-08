@@ -10,7 +10,8 @@ public enum ArticleState{
     REFUSE("审核拒绝",25),
     CREATED("已创建",27),
     PUBLISHED("已发布",28),
-    AUDITING("审核中",29);
+    AUDITING("审核中",29),
+    DELETED("已删除",32);
     /**
      * 状态描述
      */
@@ -31,5 +32,9 @@ public enum ArticleState{
 
     public int getValueId() {
         return valueId;
+    }
+
+    public boolean isEquals(int valueId){
+        return getValueId()==valueId;
     }
 }

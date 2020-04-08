@@ -7,7 +7,7 @@ package com.zzk.bitbyte.util;
  */
 public enum UserState {
     LOCKED("已锁定",31),
-    DELETEED("已删除",32),
+    DELETED("已删除",32),
     BANNED("已封禁",33),
     NORMAL("正常",34);
     /**
@@ -30,5 +30,9 @@ public enum UserState {
 
     public int getValueId() {
         return valueId;
+    }
+
+    public boolean isEquals(int valueId){
+        return getValueId()==valueId;
     }
 }
