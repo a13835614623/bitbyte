@@ -54,9 +54,8 @@ public class UserService implements ReactiveUserDetailsService {
             Set<SimpleGrantedAuthority> perms = user.getPermList().stream().map(perm -> new SimpleGrantedAuthority(perm.getPermStr()))
                     .collect(Collectors.toSet());
             roles.addAll(perms);
-            MyUserDeatils myUserDeatils = new MyUserDeatils(username, passwordEncoder.encode(user.getUserPassword()), roles);
-            myUserDeatils.setUser(user);
-            return myUserDeatils;
+            return new MyUserDeatils(username, passwordEncoder.encode(user.getUserPassword()),
+                    roles,user);
         } catch (Exception e) {
             log.error("转换失败！", e);
             return null;
@@ -85,8 +84,7 @@ public class UserService implements ReactiveUserDetailsService {
                             .map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
                 }
             }
-            MyUserDeatils myUserDeatils = new MyUserDeatils(username, password, simpleGrantedAuthorities);
-            myUserDeatils.setUser(user);
+            MyUserDeatils myUserDeatils = new MyUserDeatils(username, password, simpleGrantedAuthorities,user);
             // 重置过期时间
             redisUtil.expire(key, Util.randomExpTime(1));
             return myUserDeatils;

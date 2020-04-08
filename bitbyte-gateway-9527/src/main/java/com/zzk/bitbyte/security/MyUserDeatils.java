@@ -1,6 +1,7 @@
 package com.zzk.bitbyte.security;
 
 import com.zzk.bitbyte.po.User;
+import com.zzk.bitbyte.util.UserState;
 import com.zzk.bitbyte.util.Util;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,14 +24,15 @@ public class MyUserDeatils implements UserDetails {
     private boolean accountNonExpired=true;
     private boolean accountNonLocked=true;
     private boolean credentialsNonExpired=true;
-    private boolean enabled=true;
-    public MyUserDeatils(String username, String password, Set<SimpleGrantedAuthority> authorities) throws Exception {
+    public MyUserDeatils(String username, String password, Set<SimpleGrantedAuthority> authorities,User user) throws Exception {
         super();
         Util.validateStr(username,"用户名");
         Util.validateStr(password,"密码");
+        Util.validateObj(user, "用户对象");
         this.username=username;
         this.password=password;
         this.authorities= authorities;
+        this.user=user;
     }
 
     @Override
@@ -65,6 +67,6 @@ public class MyUserDeatils implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return !UserState.NORMAL.isEquals(user.getUserState());
     }
 }
