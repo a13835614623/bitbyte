@@ -339,6 +339,7 @@ public class ArticleServiceImpl implements ArticleService {
     public List<Article> findArticlesByUserId(String userId) {
         ArticleExample example = new ArticleExample();
         example.createCriteria().andArticleUserEqualTo(userId);
+        example.createCriteria().andArticleStateNotEqualTo(ArticleState.DELETED.getValueId());
         return articleMapper.selectByExample(example);
     }
 
