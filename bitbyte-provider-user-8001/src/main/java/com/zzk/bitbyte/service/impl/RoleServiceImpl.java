@@ -1,7 +1,9 @@
 package com.zzk.bitbyte.service.impl;
 
+import com.zzk.bitbyte.mapper.AuthorityMapper;
 import com.zzk.bitbyte.mapper.RoleExtendMapper;
 import com.zzk.bitbyte.mapper.RoleMapper;
+import com.zzk.bitbyte.mapper.RolePermissionMapper;
 import com.zzk.bitbyte.po.Role;
 import com.zzk.bitbyte.po.query.RoleQueryVo;
 import com.zzk.bitbyte.service.RoleService;
@@ -24,6 +26,13 @@ public class RoleServiceImpl implements RoleService {
 
     @Autowired
     RoleExtendMapper roleExtendMapper;
+
+    @Autowired
+    AuthorityMapper authorityMapper;
+
+    @Autowired
+    RolePermissionMapper rolePermissionMapper;
+
     @Autowired
     RoleMapper roleMapper;
 
@@ -51,7 +60,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public void addRole(Role role) throws Exception {
-        Util.validateObj(role,ROLE);
+        Util.validateObj(role, ROLE);
         role.setRoleId(UUID.randomUUID().toString());
         Date now = new Date();
         role.setCreateat(now);
@@ -66,8 +75,12 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public void deleteRoleByRoleId(String roleId) throws Exception {
-        Util.validateObj(roleId,ROLE_ID);
-        roleMapper.deleteByPrimaryKey(roleId);
+        Util.validateObj(roleId, ROLE_ID);
+        try {
+            roleMapper.deleteByPrimaryKey(roleId);
+        }catch (Exception e){
+            throw new Exception("该角色有关联数据,禁止删除!");
+        }
     }
 
     /**
@@ -77,7 +90,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public void updateRole(Role role) throws Exception {
-        Util.validateObj(role,ROLE);
+        Util.validateObj(role, ROLE);
         role.setUpdateat(new Date());
         roleMapper.updateByPrimaryKeySelective(role);
     }

@@ -67,7 +67,11 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public void deletePermissionByPermId(String permId) throws Exception {
         Util.validateStr(permId,PERM_ID);
-        permissionMapper.deleteByPrimaryKey(permId);
+        try {
+            permissionMapper.deleteByPrimaryKey(permId);
+        }catch (Exception e){
+            throw new Exception("该权限有关联数据，禁止删除!");
+        }
     }
 
     /**
