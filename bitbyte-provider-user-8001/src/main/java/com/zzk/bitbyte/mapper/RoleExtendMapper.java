@@ -12,6 +12,17 @@ import java.util.List;
  */
 @Mapper
 public interface RoleExtendMapper {
+    /**
+     * 根据查询对象获得角色列表
+     * @param vo
+     * @return
+     */
     List<Role> getRoleListByQueryVo(RoleQueryVo vo);
+
+    /**
+     * 根据查询对象获得角色个数
+     * @param vo
+     * @return
+     */
     Integer getRoleCountByQueryVo(RoleQueryVo vo);
 }
