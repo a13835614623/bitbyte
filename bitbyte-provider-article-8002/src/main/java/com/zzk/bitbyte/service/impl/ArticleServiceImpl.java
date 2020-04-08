@@ -344,10 +344,10 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public void deleteArticle(String userId, String articleId) throws Exception {
-        ArticleExample example = new ArticleExample();
-        ArticleExample.Criteria criteria = example.createCriteria();
-        criteria.andArticleIdEqualTo(articleId).andArticleUserEqualTo(userId);
-        articleMapper.deleteByExample(example);
+        ArticleWithBLOBs article =new ArticleWithBLOBs();
+        article.setArticleId(articleId);
+        article.setArticleState(ArticleState.DELETED.getValueId());
+        articleMapper.updateByPrimaryKeySelective(article);
         // 删除文章缓存
         redisUtil.del(KEY_ARTICLE_PRE + articleId);
     }

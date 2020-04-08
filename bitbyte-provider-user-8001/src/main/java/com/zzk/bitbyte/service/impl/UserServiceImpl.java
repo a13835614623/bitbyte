@@ -7,6 +7,7 @@ import com.zzk.bitbyte.po.User;
 import com.zzk.bitbyte.po.query.UserQueryVo;
 import com.zzk.bitbyte.service.UserService;
 import com.zzk.bitbyte.util.RedisUtil;
+import com.zzk.bitbyte.util.UserState;
 import com.zzk.bitbyte.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteByUserId(String userId) throws Exception {
         Util.validateObj(userId, USER_ID);
+        User user =new User();
+        user.setUserId(userId);
+        user.setUserState(UserState.DELETED.getValueId());
+        usermapper.updateByPrimaryKeySelective(user);
         usermapper.deleteByPrimaryKey(userId);
         // 删除信息缓存
         redisUtil.del(KEY_USER_PRE + userId);
