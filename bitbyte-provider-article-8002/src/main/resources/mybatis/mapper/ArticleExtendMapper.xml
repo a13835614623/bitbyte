@@ -113,21 +113,22 @@
             resultMap="ArticleWithAuthorAndContent">
         <include refid="select_article_author_content"/>
         WHERE a.article_id=#{articleId}
-        AND
-        a.article_user=u.user_id
+        AND a.article_user=u.user_id
     </select>
     <!--    根据文章ID查询文章以及作者-->
     <select id="findArticleWithAuthorById" parameterType="String" resultMap="BaseArticleWithAuthor">
         <include refid="select_article_author"/>
         where a.article_id=#{articleId}
     </select>
-    <!--    获取随机文章ID-->
+
+    <!--    随机获取已经发布的文章ID-->
     <select id="findRandomArticleIdWithAuthor" parameterType="Integer" resultType="String">
         select a.article_id
         FROM article a
         WHERE a.article_id >= (
         SELECT floor(RAND() * ((SELECT MAX(article_id) FROM article)-(SELECT MIN(article_id) FROM article))
         +(SELECT MIN(article_id) FROM article)))
+          AND a.article_state = 28
         LIMIT #{num}
     </select>
 
@@ -162,6 +163,7 @@
         where sub.sub_user_child = #{userId}
         AND a.article_user = u.user_id
         AND sub.sub_user_parent = u.user_id
+        AND a.article_state = 28
         order by a.article_publish_time DESC
         LIMIT 0,5
     </select>
