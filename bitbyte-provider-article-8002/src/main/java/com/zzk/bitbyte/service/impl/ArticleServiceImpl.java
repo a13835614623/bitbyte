@@ -195,6 +195,7 @@ public class ArticleServiceImpl implements ArticleService {
     public void addReadHistory(String articleId, String userId) {
         ReadHistory readHistory = new ReadHistory();
         Date now = new Date();
+        readHistory.setReadId(UUID.randomUUID().toString());
         readHistory.setReadArticle(articleId);
         readHistory.setReadUser(userId);
         readHistory.setCreateat(now);
