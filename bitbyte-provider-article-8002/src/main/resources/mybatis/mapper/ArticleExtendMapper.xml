@@ -16,6 +16,7 @@
         <result column="article_tags" jdbcType="VARCHAR"
                 property="articleTags"/>
         <result column="article_part" jdbcType="INTEGER" property="articlePart"/>
+        <result column="article_summary" jdbcType="VARCHAR" property="articleSummary" />
     </resultMap>
     <resultMap extends="BaseArticle" id="BaseArticleWithAuthor"
                type="com.zzk.bitbyte.po.ArticleWithBLOBs">
@@ -48,22 +49,13 @@
                a.article_title,
                a.article_read,
                a.article_publish_time,
+               a.article_summary,
                u.user_name,
                u.user_pic
     </sql>
     <sql id="article_columns_with_content">
-        a.article_id,
-               a.article_user,
-               a.article_tags,
-               a.article_part,
-               a.article_state,
-               a.article_title,
-               a.article_content,
-               a.article_md_content,
-               a.article_read,
-               a.article_publish_time,
-               u.user_name,
-               u.user_pic
+        <include refid="article_columns_no_content"/>,a.article_content,
+        a.article_md_content
     </sql>
     <!--    查询文章作者携带内容-->
     <sql id="select_article_author_content">
@@ -80,24 +72,26 @@
         article AS a
     </sql>
     <sql id="where_query_sql">
-        <if test="article!=null">
-            <if test="article.articleUser!=null and article.articleUser!=''">
-                AND a.article_user=#{article.articleUser}
-            </if>
-            <if test="article.articlePart!=null">
-                AND a.article_part=#{article.articlePart}
-            </if>
-            <if test="article.articleState!=null">
-                AND a.article_state=#{article.articleState}
-            </if>
-            <if test="article.articleId!=null and article.articleId!=''">
-                AND a.article_id=#{article.articleId}
-            </if>
-            <if test="article.articleTitle!=null and article.articleTitle!=''">
-                AND a.article_title like '%${article.articleTitle}%'
-            </if>
-            <if test="article.userName!=null and article.userName!=''">
-                AND u.user_name like '%${article.userName}%'
+        <trim suffixOverrides="AND ">
+            <if test="article!=null">
+                <if test="article.articleUser!=null and article.articleUser!=''">
+                    AND a.article_user=#{article.articleUser}
+                </if>
+                <if test="article.articlePart!=null">
+                    AND a.article_part=#{article.articlePart}
+                </if>
+                <if test="article.articleState!=null">
+                    AND a.article_state=#{article.articleState}
+                </if>
+                <if test="article.articleId!=null and article.articleId!=''">
+                    AND a.article_id=#{article.articleId}
+                </if>
+                <if test="article.articleTitle!=null and article.articleTitle!=''">
+                    AND a.article_title like '%${article.articleTitle}%'
+                </if>
+                <if test="article.userName!=null and article.userName!=''">
+                    AND u.user_name like '%${article.userName}%'
+                </if>
             </if>
             <if test="articlePublishStart!=null">
                 AND a.article_publish_time >= #{articlePublishStart}
@@ -105,7 +99,13 @@
             <if test="articlePublishEnd!=null">
                 AND a.article_publish_time &lt;= #{articlePublishEnd}
             </if>
-        </if>
+            <if test="articleStateList!=null">
+                AND a.article_state in
+                <foreach collection="articleStateList" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </trim>
     </sql>
 
     <!-- 通过文章ID查找文章及其作者+内容信息 -->

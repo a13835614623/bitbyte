@@ -4,6 +4,7 @@ import com.zzk.bitbyte.po.extend.ArticleExtend;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 文章查询包装类
@@ -16,4 +17,6 @@ public class ArticleQueryVo extends QueryVo{
 
     private Date articlePublishStart;
     private Date articlePublishEnd;
+
+    private List<Integer> articleStateList;
 }
