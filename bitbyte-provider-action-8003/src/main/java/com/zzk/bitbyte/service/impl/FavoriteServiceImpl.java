@@ -3,10 +3,7 @@ package com.zzk.bitbyte.service.impl;
 import com.zzk.bitbyte.mapper.FavoriteExtendMapper;
 import com.zzk.bitbyte.mapper.FavoriteGroupMapper;
 import com.zzk.bitbyte.mapper.FavoriteMapper;
-import com.zzk.bitbyte.po.Favorite;
-import com.zzk.bitbyte.po.FavoriteExtend;
-import com.zzk.bitbyte.po.FavoriteGroup;
-import com.zzk.bitbyte.po.FavoriteGroupExample;
+import com.zzk.bitbyte.po.*;
 import com.zzk.bitbyte.service.FavoriteService;
 import com.zzk.bitbyte.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +40,8 @@ public class FavoriteServiceImpl implements FavoriteService {
      */
     @Override
     public Favorite addFavorite(String articleId, String groupId) throws Exception {
-        Util.validateStr("文章ID", articleId);
-        Util.validateStr("分组ID",groupId);
+        Util.validateStr(articleId,"文章ID");
+        Util.validateStr(groupId,"分组ID");
         Favorite favorite = new Favorite();
         favorite.setFavoriteId(UUID.randomUUID().toString());
         favorite.setFavoriteArticle(articleId);
@@ -66,8 +63,8 @@ public class FavoriteServiceImpl implements FavoriteService {
      */
     @Override
     public FavoriteGroup addFavoriteGroup(String groupName, String userId) throws Exception {
-        Util.validateStr("用户ID", userId);
-        Util.validateStr("分组名称",groupName);
+        Util.validateStr(userId,"用户ID");
+        Util.validateStr(groupName,"分组名称");
         FavoriteGroup favoriteGroup = new FavoriteGroup();
         favoriteGroup.setFavoriteGroupId(UUID.randomUUID().toString());
         favoriteGroup.setFavoriteGroupName(groupName);
@@ -87,7 +84,7 @@ public class FavoriteServiceImpl implements FavoriteService {
      */
     @Override
     public void deleteFavorite(String favoriteId) throws Exception {
-        Util.validateStr("收藏ID", favoriteId);
+        Util.validateStr(favoriteId,"收藏ID");
         favoriteMapper.deleteByPrimaryKey(favoriteId);
     }
 
@@ -98,7 +95,7 @@ public class FavoriteServiceImpl implements FavoriteService {
      */
     @Override
     public void deleteFavoriteGroup(String groupId) throws Exception {
-        Util.validateStr("分组ID", groupId);
+        Util.validateStr(groupId,"分组ID");
         favoriteGroupMapper.deleteByPrimaryKey(groupId);
     }
 
@@ -110,10 +107,18 @@ public class FavoriteServiceImpl implements FavoriteService {
      */
     @Override
     public List<FavoriteGroup> findFavoriteGroupListByUserId(String userId) throws Exception {
-        Util.validateStr("用户ID", userId);
+        Util.validateStr(userId,"用户ID");
         FavoriteGroupExample example = new FavoriteGroupExample();
         example.createCriteria().andFavoriteUserEqualTo(userId);
         return favoriteGroupMapper.selectByExample(example);
+    }
+
+    @Override
+    public long findFavoriteGroupListCountByUserId(String userId) throws Exception {
+        Util.validateStr(userId,"用户ID");
+        FavoriteGroupExample example = new FavoriteGroupExample();
+        example.createCriteria().andFavoriteUserEqualTo(userId);
+        return favoriteGroupMapper.countByExample(example);
     }
 
     /**
@@ -122,15 +127,22 @@ public class FavoriteServiceImpl implements FavoriteService {
      * @return
      */
     @Override
-    public List<FavoriteExtend> findFavoriteListByGroupId(String groupId) throws Exception {
-        Util.validateStr("分组ID", groupId);
-        return favoriteExtendMapper.findFavoriteListByGroupId(groupId);
+    public List<FavoriteExtend> findFavoriteList(String groupId,Integer start,Integer count) throws Exception {
+        Util.validateStr(groupId,"分组ID" );
+        Util.validateObj(start,"开始索引" );
+        Util.validateObj(count,"个数");
+        return favoriteExtendMapper.findFavoriteList(groupId,start, count);
     }
+    public long findFavoriteListCount(String groupId) throws Exception {
+        Util.validateStr(groupId,"分组ID" );
+        return favoriteExtendMapper.findFavoriteListCount(groupId);
+    }
+
 
     @Override
     public Favorite findFavoriteByArticleIdAndUserId(String articleId, String userId) throws Exception {
-        Util.validateStr("用户ID", userId);
-        Util.validateStr("分组ID",articleId);
+        Util.validateStr(userId,"用户ID" );
+        Util.validateStr(articleId,"分组ID");
         return favoriteExtendMapper.findFavoriteByArticleIdAndUserId(articleId, userId);
     }
 }

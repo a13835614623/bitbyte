@@ -18,8 +18,16 @@ public interface FavoriteExtendMapper {
      * @param groupId
      * @return
      */
-    List<FavoriteExtend> findFavoriteListByGroupId(String groupId);
+    List<FavoriteExtend> findFavoriteList(@Param("groupId") String groupId,
+                                          @Param("start") Integer start,
+                                          @Param("count") Integer count);
 
+    /**
+     * 根据组ID查询收藏列表数量
+     * @param groupId
+     * @return
+     */
+    long findFavoriteListCount(@Param("groupId") String groupId);
     /**
      * 根据文章ID和用户ID获取收藏信息
      * @param articleId

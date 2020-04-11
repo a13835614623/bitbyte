@@ -26,6 +26,10 @@ public class FavoriteController {
     @RequestMapping("/add")
     public ResponseState add(@RequestParam("articleId") String articleId,
                              @RequestParam("groupId") String groupId) throws Exception {
+        long count = favoriteService.findFavoriteListCount(groupId);
+        if (count>999){
+            return ResponseState.error("单个收藏夹不能包含超过1000篇文章!");
+        }
         Favorite favorite = favoriteService.addFavorite(articleId,groupId);
         return ResponseState.success("添加收藏成功!").setData(favorite);
     }
@@ -45,6 +49,9 @@ public class FavoriteController {
     @RequestMapping("/group/add")
     public ResponseState addGroup(@RequestParam("groupName") String groupName,
                                   @RequestParam("userId") String userId) throws Exception {
+        if (favoriteService.findFavoriteGroupListCountByUserId(userId)>10){
+            return ResponseState.error("收藏夹个数不能超过10个");
+        }
         FavoriteGroup favoriteGroup= favoriteService.addFavoriteGroup(groupName,userId);
         return ResponseState.success("添加收藏分组成功!").setData(favoriteGroup);
     }
@@ -75,9 +82,12 @@ public class FavoriteController {
      * @return
      */
     @RequestMapping("/get")
-    public ResponseState findFavoritesByGroupId(@RequestParam("groupId") String groupId) throws Exception {
+    public ResponseState findFavoritesByGroupId(@RequestParam("groupId") String groupId,
+                                                @RequestParam("start") Integer start,
+                                                @RequestParam("count") Integer count) throws Exception {
         return ResponseState.success("查询成功!")
-                .setData(favoriteService.findFavoriteListByGroupId(groupId));
+                .setData(favoriteService.findFavoriteList(groupId,start, count))
+                .setMore(favoriteService.findFavoriteListCount(groupId));
     }
 
     /**
