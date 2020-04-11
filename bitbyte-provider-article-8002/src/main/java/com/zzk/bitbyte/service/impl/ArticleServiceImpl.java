@@ -213,6 +213,7 @@ public class ArticleServiceImpl implements ArticleService {
         articleExtend.setArticleId((String) map.get(ARTICLE_ID));
         articleExtend.setArticleTitle((String) map.get("articleTitle"));
         articleExtend.setArticleUser((String) map.get("articleUser"));
+        articleExtend.setArticleSummary((String) map.get("articleSummary"));
         articleExtend.setArticleContent((String) map.get("articleContent"));
         articleExtend.setArticleMdContent((String) map.get("articleMdContent"));
         // int
@@ -232,6 +233,7 @@ public class ArticleServiceImpl implements ArticleService {
         map.put(PRE + "Id", articleExtend.getArticleId());
         map.put(PRE + "Title", articleExtend.getArticleTitle());
         map.put(PRE + "User", articleExtend.getArticleUser());
+        map.put(PRE + "Summary", articleExtend.getArticleSummary());
         map.put(PRE + "Content", articleExtend.getArticleContent());
         map.put(PRE + "MdContent", articleExtend.getArticleMdContent());
         //int
