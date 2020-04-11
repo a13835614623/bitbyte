@@ -100,7 +100,7 @@ public interface ArticleService {
      * 通过用户id查找文章列表
      *
      * @param userId
-     * @return 文字列表
+     * @return 文章列表
      * @
      */
     List<Article> findArticlesByUserId(String userId);

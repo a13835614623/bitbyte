@@ -19,8 +19,8 @@
                 property="articlePublishTime"/>
         <result column="article_part" jdbcType="INTEGER" property="articlePart"/>
     </resultMap>
-    <!--    根据组ID查询收藏列表-->
-    <select id="findFavoriteListByGroupId" parameterType="String" resultMap="BaseResultMap">
+    <!--    根据查询对象查询收藏列表-->
+    <select id="findFavoriteList" resultMap="BaseResultMap">
         select f.favorite_id,
                favorite_article,
                favorite_time,
@@ -39,7 +39,20 @@
           and a.article_user=u.user_id
           and a.article_state = 28
           and f.favorite_group = #{groupId}
+        limit #{start},#{count}
     </select>
+
+    <select id="findFavoriteListCount" resultType="Long">
+        select count(distinct f.favorite_id)
+        from favorite f,
+             article a,
+             user u
+        where f.favorite_article = a.article_id
+          and a.article_user=u.user_id
+          and a.article_state = 28
+          and f.favorite_group = #{groupId}
+    </select>
+
 
     <select id="findFavoriteByArticleIdAndUserId" resultMap="BaseResultMap">
         select f.favorite_id, favorite_article, favorite_time, favorite_group
