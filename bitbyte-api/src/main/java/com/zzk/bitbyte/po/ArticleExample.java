@@ -744,6 +744,76 @@ public class ArticleExample {
             addCriterion("updateAt not between", value1, value2, "updateat");
             return (Criteria) this;
         }
+
+        public Criteria andArticleSummaryIsNull() {
+            addCriterion("article_summary is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticleSummaryIsNotNull() {
+            addCriterion("article_summary is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticleSummaryEqualTo(String value) {
+            addCriterion("article_summary =", value, "articleSummary");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticleSummaryNotEqualTo(String value) {
+            addCriterion("article_summary <>", value, "articleSummary");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticleSummaryGreaterThan(String value) {
+            addCriterion("article_summary >", value, "articleSummary");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticleSummaryGreaterThanOrEqualTo(String value) {
+            addCriterion("article_summary >=", value, "articleSummary");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticleSummaryLessThan(String value) {
+            addCriterion("article_summary <", value, "articleSummary");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticleSummaryLessThanOrEqualTo(String value) {
+            addCriterion("article_summary <=", value, "articleSummary");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticleSummaryLike(String value) {
+            addCriterion("article_summary like", value, "articleSummary");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticleSummaryNotLike(String value) {
+            addCriterion("article_summary not like", value, "articleSummary");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticleSummaryIn(List<String> values) {
+            addCriterion("article_summary in", values, "articleSummary");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticleSummaryNotIn(List<String> values) {
+            addCriterion("article_summary not in", values, "articleSummary");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticleSummaryBetween(String value1, String value2) {
+            addCriterion("article_summary between", value1, value2, "articleSummary");
+            return (Criteria) this;
+        }
+
+        public Criteria andArticleSummaryNotBetween(String value1, String value2) {
+            addCriterion("article_summary not between", value1, value2, "articleSummary");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

@@ -31,9 +31,21 @@ public class Article implements Serializable{
     @NotNull(message = "文章分区不能为空!", groups = {ArticleCommitGroup.class})
     private Integer articlePart;
 
+    @NotBlank(message = "文章摘要不能为空!", groups = {ArticleCommitGroup.class})
+    private String articleSummary;
+
     private Date createat;
 
     private Date updateat;
+
+    public void setArticleSummary(String articleSummary) {
+        this.articleSummary = articleSummary;
+    }
+
+    public String getArticleSummary() {
+        return articleSummary;
+    }
+
     public String getArticleId() {
         return articleId;
     }

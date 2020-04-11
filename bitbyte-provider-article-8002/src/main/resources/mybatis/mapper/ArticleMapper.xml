@@ -12,6 +12,7 @@
     <result column="article_part" jdbcType="INTEGER" property="articlePart" />
     <result column="createAt" jdbcType="TIMESTAMP" property="createat" />
     <result column="updateAt" jdbcType="TIMESTAMP" property="updateat" />
+    <result column="article_summary" jdbcType="VARCHAR" property="articleSummary" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.zzk.bitbyte.po.ArticleWithBLOBs">
     <result column="article_content" jdbcType="LONGVARCHAR" property="articleContent" />
@@ -77,7 +78,7 @@
   </sql>
   <sql id="Base_Column_List">
     article_id, article_title, article_user, article_read, article_state, article_publish_time, 
-    article_tags, article_part, createAt, updateAt
+    article_tags, article_part, createAt, updateAt, article_summary
   </sql>
   <sql id="Blob_Column_List">
     article_content, article_md_content
@@ -134,13 +135,13 @@
     insert into article (article_id, article_title, article_user, 
       article_read, article_state, article_publish_time, 
       article_tags, article_part, createAt, 
-      updateAt, article_content, article_md_content
-      )
+      updateAt, article_summary, article_content, 
+      article_md_content)
     values (#{articleId,jdbcType=VARCHAR}, #{articleTitle,jdbcType=VARCHAR}, #{articleUser,jdbcType=VARCHAR}, 
       #{articleRead,jdbcType=DECIMAL}, #{articleState,jdbcType=INTEGER}, #{articlePublishTime,jdbcType=TIMESTAMP}, 
       #{articleTags,jdbcType=VARCHAR}, #{articlePart,jdbcType=INTEGER}, #{createat,jdbcType=TIMESTAMP}, 
-      #{updateat,jdbcType=TIMESTAMP}, #{articleContent,jdbcType=LONGVARCHAR}, #{articleMdContent,jdbcType=LONGVARCHAR}
-      )
+      #{updateat,jdbcType=TIMESTAMP}, #{articleSummary,jdbcType=VARCHAR}, #{articleContent,jdbcType=LONGVARCHAR}, 
+      #{articleMdContent,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.zzk.bitbyte.po.ArticleWithBLOBs">
     insert into article
@@ -174,6 +175,9 @@
       </if>
       <if test="updateat != null">
         updateAt,
+      </if>
+      <if test="articleSummary != null">
+        article_summary,
       </if>
       <if test="articleContent != null">
         article_content,
@@ -212,6 +216,9 @@
       </if>
       <if test="updateat != null">
         #{updateat,jdbcType=TIMESTAMP},
+      </if>
+      <if test="articleSummary != null">
+        #{articleSummary,jdbcType=VARCHAR},
       </if>
       <if test="articleContent != null">
         #{articleContent,jdbcType=LONGVARCHAR},
@@ -260,6 +267,9 @@
       <if test="record.updateat != null">
         updateAt = #{record.updateat,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.articleSummary != null">
+        article_summary = #{record.articleSummary,jdbcType=VARCHAR},
+      </if>
       <if test="record.articleContent != null">
         article_content = #{record.articleContent,jdbcType=LONGVARCHAR},
       </if>
@@ -283,6 +293,7 @@
       article_part = #{record.articlePart,jdbcType=INTEGER},
       createAt = #{record.createat,jdbcType=TIMESTAMP},
       updateAt = #{record.updateat,jdbcType=TIMESTAMP},
+      article_summary = #{record.articleSummary,jdbcType=VARCHAR},
       article_content = #{record.articleContent,jdbcType=LONGVARCHAR},
       article_md_content = #{record.articleMdContent,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
@@ -300,7 +311,8 @@
       article_tags = #{record.articleTags,jdbcType=VARCHAR},
       article_part = #{record.articlePart,jdbcType=INTEGER},
       createAt = #{record.createat,jdbcType=TIMESTAMP},
-      updateAt = #{record.updateat,jdbcType=TIMESTAMP}
+      updateAt = #{record.updateat,jdbcType=TIMESTAMP},
+      article_summary = #{record.articleSummary,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -335,6 +347,9 @@
       <if test="updateat != null">
         updateAt = #{updateat,jdbcType=TIMESTAMP},
       </if>
+      <if test="articleSummary != null">
+        article_summary = #{articleSummary,jdbcType=VARCHAR},
+      </if>
       <if test="articleContent != null">
         article_content = #{articleContent,jdbcType=LONGVARCHAR},
       </if>
@@ -355,6 +370,7 @@
       article_part = #{articlePart,jdbcType=INTEGER},
       createAt = #{createat,jdbcType=TIMESTAMP},
       updateAt = #{updateat,jdbcType=TIMESTAMP},
+      article_summary = #{articleSummary,jdbcType=VARCHAR},
       article_content = #{articleContent,jdbcType=LONGVARCHAR},
       article_md_content = #{articleMdContent,jdbcType=LONGVARCHAR}
     where article_id = #{articleId,jdbcType=VARCHAR}
@@ -369,7 +385,8 @@
       article_tags = #{articleTags,jdbcType=VARCHAR},
       article_part = #{articlePart,jdbcType=INTEGER},
       createAt = #{createat,jdbcType=TIMESTAMP},
-      updateAt = #{updateat,jdbcType=TIMESTAMP}
+      updateAt = #{updateat,jdbcType=TIMESTAMP},
+      article_summary = #{articleSummary,jdbcType=VARCHAR}
     where article_id = #{articleId,jdbcType=VARCHAR}
   </update>
 </mapper>

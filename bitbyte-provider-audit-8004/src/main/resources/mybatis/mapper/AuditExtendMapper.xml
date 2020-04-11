@@ -25,6 +25,7 @@
             <result column="article_tags" jdbcType="VARCHAR"
                     property="articleTags"/>
             <result column="article_part" jdbcType="INTEGER" property="articlePart"/>
+            <result column="article_summary" jdbcType="VARCHAR" property="articleSummary" />
             <!-- 作者昵称 -->
             <result column="user_name" jdbcType="VARCHAR" property="userName"/>
             <!-- 作者头像 -->
@@ -51,6 +52,7 @@
                a.article_md_content,
                a.article_read,
                a.article_publish_time,
+               a.article_summary,
                u.user_name,
                u.user_pic
         from audit aa
