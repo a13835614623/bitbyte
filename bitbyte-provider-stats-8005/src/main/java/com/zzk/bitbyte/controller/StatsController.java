@@ -1,10 +1,7 @@
 package com.zzk.bitbyte.controller;
 
 import com.zzk.bitbyte.po.query.*;
-import com.zzk.bitbyte.service.AccessStatsService;
-import com.zzk.bitbyte.service.ActionTopListStatsService;
-import com.zzk.bitbyte.service.ArticleStatsService;
-import com.zzk.bitbyte.service.UserStatsService;
+import com.zzk.bitbyte.service.*;
 import com.zzk.bitbyte.util.ResponseState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,6 +30,8 @@ public class StatsController {
     @Autowired
     ActionTopListStatsService actionTopListStatsService;
 
+    @Autowired
+    UserStatsExtendService userStatsExtendService;
     @RequestMapping("/article/get")
     public ResponseState article(@RequestBody ArticleStatsQueryVo queryVo) throws Exception {
         return ResponseState.success(QUERY_SUCCESS).setData(articleStatsService.getArticleStatsListByQueryVo(queryVo));
@@ -70,5 +69,15 @@ public class StatsController {
     @RequestMapping("/toplist/article")
     public ResponseState actionList(@RequestBody  ActionTopListStatsQueryVo queryVo) throws Exception {
         return ResponseState.success(QUERY_SUCCESS).setData(actionTopListStatsService.getActionNumTopArticleList(queryVo));
+    }
+
+    @RequestMapping("/user/fans")
+    public ResponseState fans(@RequestBody UserFansStatsQueryVo queryVo) throws Exception {
+        return ResponseState.success(QUERY_SUCCESS).setData(userStatsExtendService.getFansStatsListByQueryVo(queryVo));
+    }
+
+    @RequestMapping("/user/article")
+    public ResponseState article(@RequestBody UserArticlesStatsQueryVo queryVo) throws Exception {
+        return ResponseState.success(QUERY_SUCCESS).setData(userStatsExtendService.getUserArticleStatsByQueryVo(queryVo));
     }
 }
