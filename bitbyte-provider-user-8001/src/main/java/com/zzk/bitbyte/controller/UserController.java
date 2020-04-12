@@ -99,8 +99,20 @@ public class UserController {
      */
     @RequestMapping(value = "/count")
     public ResponseState count(@RequestBody UserQueryVo queryVo) throws Exception {
-        return ResponseState.success("查询成功").setData(userService.findUsersCountByQueryVo(queryVo));
+        return ResponseState.success("查询成功!").setData(userService.findUsersCountByQueryVo(queryVo));
     }
+
+    /**
+     * 通过用户ID删除用户
+     *
+     * @param userId
+     */
+    @RequestMapping(value = "/delete")
+    public ResponseState delete(@RequestParam("userId") String userId) throws Exception {
+        userService.deleteByUserId(userId);
+        return ResponseState.success("删除成功!");
+    }
+
 
     /**
      * 用户注册
@@ -268,13 +280,25 @@ public class UserController {
      * @param userId 用户id
      */
     @RequestMapping(value = "/subscribe")
-    public ResponseState getSubscribers(@RequestParam("userId") String userId) throws Exception {
+    public ResponseState getSubscribers(@RequestParam("userId") String userId,
+                                        @RequestParam("start") Integer start,
+                                        @RequestParam("count") Integer count) throws Exception {
         ResponseState state = new ResponseState();
-        List<User> subscribers = userService.findSubscribersById(userId);
+        List<User> subscribers = userService.findSubscribersById(userId,start,count);
         state.setStatus(ResponseState.STATUS_SUCCESS);
         state.setData(subscribers);
+        state.setMore(userService.findSubscriberCountByUserId(userId));
         state.setMessage("获取关注列表成功!");
         return state;
+    }
+    /**
+     * 获取用户关注数量
+     *
+     * @param userId 用户id
+     */
+    @RequestMapping(value = "/subscribe/count")
+    public ResponseState getSubscribersCount(@RequestParam("userId") String userId) throws Exception {
+        return ResponseState.success("获取关注数量成功").setData(userService.findSubscriberCountByUserId(userId));
     }
 
     /**
@@ -283,13 +307,24 @@ public class UserController {
      * @param userId 用户id
      */
     @RequestMapping(value = "/fans")
-    public ResponseState getFans(@RequestParam("userId") String userId) throws Exception {
+    public ResponseState getFans(@RequestParam("userId") String userId,
+                                 @RequestParam("start") Integer start,
+                                 @RequestParam("count") Integer count) throws Exception {
         ResponseState state = new ResponseState();
-        List<User> fans = userService.findFansByUserId(userId);
+        List<User> fans = userService.findFansByUserId(userId,start,count);
         state.setStatus(ResponseState.STATUS_SUCCESS);
         state.setData(fans);
+        state.setMore(userService.findFansCountByUserId(userId));
         state.setMessage("获取粉丝列表成功!");
         return state;
     }
-
+    /**
+     * 获取用户粉丝数量
+     *
+     * @param userId 用户id
+     */
+    @RequestMapping(value = "/fans/count")
+    public ResponseState getFansCount(@RequestParam("userId") String userId) throws Exception {
+        return ResponseState.success("获取关注数量成功").setData(userService.findFansCountByUserId(userId));
+    }
 }
