@@ -170,23 +170,43 @@
     </select>
 
     <!-- 根据用户id获取关注列表 -->
-    <select id="findSubscribersById" parameterType="String"
-            resultMap="BaseResultMap">
+    <select id="findSubscribersByUserId" resultMap="BaseResultMap">
         SELECT user.user_id, user.user_name, user.user_pic
         FROM user,
              subscribe
         WHERE user.user_id = subscribe.sub_user_parent
           AND subscribe.sub_user_child = #{userId}
+          AND user.user_state= 34
+        LIMIT #{start},#{count}
+    </select>
+    <!-- 根据用户id获取关注列表 -->
+    <select id="findSubscriberCountByUserId" resultType="Long">
+        SELECT count(distinct user.user_id)
+        FROM user,
+             subscribe
+        WHERE user.user_id = subscribe.sub_user_parent
+          AND subscribe.sub_user_child = #{userId}
+          AND user.user_state= 34
     </select>
 
     <!-- 根据用户id获取粉丝列表 -->
-    <select id="findFansByUserId" parameterType="String"
-            resultMap="BaseResultMap">
+    <select id="findFansByUserId" resultMap="BaseResultMap">
         SELECT user.user_id, user.user_name, user.user_pic
         FROM user,
              subscribe
         WHERE user.user_id = subscribe.sub_user_child
           AND subscribe.sub_user_parent = #{userId}
+          AND user.user_state= 34
+        LIMIT #{start},#{count}
     </select>
 
+    <!-- 根据用户id获取关注列表 -->
+    <select id="findFansCountByUserId" resultType="Long">
+        SELECT count(distinct user.user_id)
+        FROM user,
+             subscribe
+        WHERE user.user_id = subscribe.sub_user_child
+          AND subscribe.sub_user_parent = #{userId}
+          AND user.user_state= 34
+    </select>
 </mapper>

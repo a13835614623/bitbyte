@@ -72,7 +72,7 @@ public interface UserService {
      * @return 关注用户列表
      * @
      */
-    List<User> findSubscribersById(String userId) throws Exception;
+    List<User> findSubscribersById(String userId,Integer start,Integer count) throws Exception;
 
 
     /**
@@ -81,5 +81,20 @@ public interface UserService {
      * @param userId 用户id
      * @
      */
-    List<User> findFansByUserId(String userId) throws Exception;
+    List<User> findFansByUserId(String userId,Integer start,Integer count) throws Exception;
+
+
+    /**
+     * 通过用户id查找粉丝数量
+     * @param userId
+     * @return
+     */
+    long findFansCountByUserId(String userId) throws Exception;
+
+    /**
+     * 通过用户id查找关注者数量
+     * @param userId
+     * @return
+     */
+    long findSubscriberCountByUserId(String userId) throws Exception;
 }

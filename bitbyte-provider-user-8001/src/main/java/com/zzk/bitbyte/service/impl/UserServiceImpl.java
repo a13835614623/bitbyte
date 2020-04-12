@@ -13,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -48,7 +46,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteByUserId(String userId) throws Exception {
         Util.validateObj(userId, USER_ID);
-        User user =new User();
+        User user = new User();
         user.setUserId(userId);
         user.setUserState(UserState.DELETED.getValueId());
         usermapper.updateByPrimaryKeySelective(user);
@@ -97,7 +95,7 @@ public class UserServiceImpl implements UserService {
         map.put("userEmail", user.getUserEmail());
         map.put("userMobile", user.getUserMobile());
         map.put("userPic", user.getUserPic());
-        map.put("userState", user.getUserState()+"");
+        map.put("userState", user.getUserState() + "");
         map.put("userBirthday", user.getUserBirthday().getTime() + "");
         map.put("userAddress", user.getUserAddress());
         map.put("userSex", user.getUserSex());
@@ -133,26 +131,17 @@ public class UserServiceImpl implements UserService {
         Util.validateQueryVo(vo);
         return userExtendMapper.findUsersCountByQueryVo(vo);
     }
-
+    private void validate(String userId, Integer start, Integer count) throws Exception {
+        Util.validateStr(userId,"用户ID");
+        Util.validateObj(start, "开始索引不能为空!");
+        Util.validateObj(count, "数量不能为空!");
+    }
     @Override
-    public List<User> findSubscribersById(String userId) throws Exception {
-        Util.validateStr(userId, USER_ID);
-        String key = KEY_USER_SUBS_PRE + userId;
-        Set<Object> subs = redisUtil.sGet(key);
-        if (subs != null && subs.size() > 0) {
-            return subs.stream().map(obj -> {
-                try {
-                    return Util.json2Bean((String) obj, User.class);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }).collect(Collectors.toList());
-        } else {
-            List<User> users = userExtendMapper.findSubscribersById(userId);
-            redisUtil.set(key, userList2Array(users), Util.randomExpTime(1));
-            return users;
-        }
+    public List<User> findSubscribersById(String userId, Integer start, Integer count) throws Exception {
+        validate(userId,start,count);
+        start=Math.max(start, 0);
+        count=Math.min(count, 10);
+        return userExtendMapper.findSubscribersByUserId(userId, start, count);
     }
 
     public Object[] userList2Array(List<User> users) {
@@ -170,25 +159,22 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<User> findFansByUserId(String userId) throws Exception {
-        Util.validateStr(userId, USER_ID);
-        String key = KEY_USER_FANS_PRE + userId;
-        Set<Object> fans = redisUtil.sGet(key);
-        if (fans != null && fans.size() > 0) {
-            return fans.stream().map(obj -> {
-                try {
-                    return Util.json2Bean((String) obj, User.class);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }).collect(Collectors.toList());
-        } else {
-            List<User> users = userExtendMapper.findFansByUserId(userId);
-            redisUtil.set(key, userList2Array(users), Util.randomExpTime(1));
-            return users;
-        }
+    public List<User> findFansByUserId(String userId, Integer start, Integer count) throws Exception {
+        validate(userId,start,count);
+        start=Math.max(start, 0);
+        count=Math.min(count, 10);
+        return userExtendMapper.findFansByUserId(userId,start,count);
     }
 
+    @Override
+    public long findFansCountByUserId(String userId) throws Exception {
+        Util.validateStr(userId,"用户ID");
+        return userExtendMapper.findFansCountByUserId(userId);
+    }
 
+    @Override
+    public long findSubscriberCountByUserId(String userId) throws Exception {
+        Util.validateStr(userId,"用户ID");
+        return userExtendMapper.findSubscriberCountByUserId(userId);
+    }
 }

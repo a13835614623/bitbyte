@@ -1,6 +1,5 @@
 package com.zzk.bitbyte.mapper;
 
-import com.zzk.bitbyte.po.Article;
 import com.zzk.bitbyte.po.User;
 import com.zzk.bitbyte.po.query.UserQueryVo;
 import org.apache.ibatis.annotations.Mapper;
@@ -29,7 +28,7 @@ public interface UserExtendMapper {
      * @return
      * @throws Exception
      */
-    public List<User> findUsersByQueryVo(UserQueryVo userQueryVo);
+    List<User> findUsersByQueryVo(UserQueryVo userQueryVo);
 
     /**
      * 根据QueryVo信息综合查询数量
@@ -38,7 +37,7 @@ public interface UserExtendMapper {
      * @return
      * @throws Exception
      */
-    public Integer findUsersCountByQueryVo(UserQueryVo vo);
+    Integer findUsersCountByQueryVo(UserQueryVo vo);
 
 
     /**
@@ -47,7 +46,7 @@ public interface UserExtendMapper {
      * @param user
      * @throws Exception
      */
-    public void updateUser(User user);
+    void updateUser(User user);
 
     /**
      * 得到关注列表
@@ -56,7 +55,9 @@ public interface UserExtendMapper {
      * @return 关注用户列表
      * @throws Exception
      */
-    public List<User> findSubscribersById(String userId);
+    List<User> findSubscribersByUserId(@Param("userId") String userId,
+                                              @Param("start") Integer start,
+                                              @Param("count") Integer count);
 
     /**
      * 通过用户id查找粉丝
@@ -64,5 +65,21 @@ public interface UserExtendMapper {
      * @param userId 用户id
      * @throws Exception
      */
-    public List<User> findFansByUserId(String userId);
+    List<User> findFansByUserId(@Param("userId") String userId,
+                                       @Param("start") Integer start,
+                                       @Param("count") Integer count);
+
+    /**
+     * 通过用户id查找粉丝数量
+     * @param userId
+     * @return
+     */
+    long findFansCountByUserId(String userId);
+
+    /**
+     * 通过用户id查找关注者数量
+     * @param userId
+     * @return
+     */
+    long findSubscriberCountByUserId(String userId);
 }
