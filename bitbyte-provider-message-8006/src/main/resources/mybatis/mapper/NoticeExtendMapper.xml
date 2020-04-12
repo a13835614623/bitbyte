@@ -52,13 +52,14 @@
         createAt,
         updateAt
         from notice
-        <include refid="where"></include>
-        <include refid="limit"></include>
+        <include refid="where"/>
+         order by notice_time desc
+        <include refid="limit"/>
     </select>
     <!--    根据查询对象查询notice数量-->
     <select id="findNoticeCountByQueryVo" parameterType="NoticeQueryVo" resultType="Integer">
         select count(notice_id)
         from notice
-        <include refid="where"></include>
+        <include refid="where"/>
     </select>
 </mapper>
