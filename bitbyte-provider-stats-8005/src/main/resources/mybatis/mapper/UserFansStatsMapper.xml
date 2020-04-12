@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzk.bitbyte.mapper.UserFansStatsMapper">
+
+    <!--    获取粉丝数stats根据查询对象-->
+    <select id="getFansStatsListByQueryVo" parameterType="UserFansStatsQueryVo" resultType="UserFansStats">
+        select DATE_FORMAT(sub_time, #{dateFormat}) as subTime, COUNT(s.sub_user_child) as count
+        from subscribe s
+        where s.sub_user_parent = #{userId}
+        and s.sub_time between #{subTimeStart} and #{subTimeEnd}
+        GROUP BY subTime
+    </select>
+</mapper>

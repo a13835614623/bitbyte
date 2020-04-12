@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzk.bitbyte.mapper.UserArticlesStatsMapper">
+
+    <!--    获取粉丝数stats根据查询对象-->
+    <select id="getUserArticleStatsByQueryVo" parameterType="UserArticlesStatsQueryVo" resultType="UserArticlesStats">
+        <choose>
+            <when test="isGroupByRead">
+                select DATE_FORMAT(rh.read_time, #{dateFormat}) as time,COUNT(rh.read_id) as count
+                from read_history rh,article a
+                where rh.read_article=a.article_id
+                and a.article_user = #{userId}
+                and rh.read_time between #{timeStart} and #{timeEnd}
+                GROUP BY time
+            </when>
+            <when test="isGroupByComment">
+                select DATE_FORMAT(c.comment_time, #{dateFormat}) as time,
+                COUNT(distinct c.comment_article,c.comment_floor) as count
+                from comment c,article a
+                where c.comment_article=a.article_id
+                and a.article_user = #{userId}
+                and c.comment_time between #{timeStart} and #{timeEnd}
+                GROUP BY time
+            </when>
+            <when test="isGroupByLike">
+                select DATE_FORMAT(al.like_time, #{dateFormat}) as time,
+                COUNT(DISTINCT al.like_article,al.like_user) as count
+                from article a,article_like al
+                where a.article_user = #{userId}
+                and a.article_id = al.like_article
+                and al.like_time between #{timeStart} and #{timeEnd}
+                GROUP BY time
+            </when>
+            <when test="isGroupByFavorite">
+                select DATE_FORMAT(f.favorite_time, #{dateFormat}) as time,
+                COUNT(f.favorite_id) as count
+                from favorite f,article a
+                where f.favorite_article=a.article_id
+                and a.article_user = #{userId}
+                and f.favorite_time between #{timeStart} and #{timeEnd}
+                GROUP BY time
+            </when>
+        </choose>
+
+    </select>
+</mapper>
