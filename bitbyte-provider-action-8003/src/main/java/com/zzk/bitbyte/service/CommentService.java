@@ -16,6 +16,13 @@ public interface CommentService {
     List<CommentExtend> findArticleCommentsById(String articleId);
 
     /**
+     * 根据用户ID获取发布文章的评论数量
+     * @param userId
+     * @return
+     */
+    Long findUserArticleCommentCountByUserId(String userId);
+
+    /**
      * 添加评论
      *
      * @param comment 评论

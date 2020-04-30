@@ -145,4 +145,24 @@ public class FavoriteServiceImpl implements FavoriteService {
         Util.validateStr(articleId,"分组ID");
         return favoriteExtendMapper.findFavoriteByArticleIdAndUserId(articleId, userId);
     }
+
+    @Override
+    public Long findUserFavoriteCountByUserId(String userId) throws Exception {
+        Util.validateStr(userId,"用户ID" );
+        return favoriteExtendMapper.findUserFavoriteCountByUserId(userId);
+    }
+
+    @Override
+    public Long findArticleFavoriteCountByArticleId(String articleId) throws Exception {
+        Util.validateStr(articleId,"文章ID" );
+        FavoriteExample favoriteExample = new FavoriteExample();
+        favoriteExample.createCriteria().andFavoriteArticleEqualTo(articleId);
+        return favoriteMapper.countByExample(favoriteExample);
+    }
+
+    @Override
+    public Long findUserArticleFavoriteCountByUserId(String userId) throws Exception {
+        Util.validateStr(userId,"用户ID" );
+        return favoriteExtendMapper.findUserArticleFavoriteCountByUserId(userId);
+    }
 }

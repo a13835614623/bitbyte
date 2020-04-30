@@ -68,4 +68,18 @@ public class CommentController {
         state.setMessage("获取文章评论成功");
         return state;
     }
+
+    /**
+     * 根据用户ID获取发布文章的评论总数
+     * @param userId 用户id
+     */
+    @RequestMapping(value = "/user/count")
+    public ResponseState getUserCommentCountByUserId(@RequestParam("userId") String userId)
+            throws Exception {
+        ResponseState state = new ResponseState();
+        state.setStatus(ResponseState.STATUS_SUCCESS);
+        state.setData(commentService.findUserArticleCommentCountByUserId(userId));
+        state.setMessage("获取用户文章评论总数成功");
+        return state;
+    }
 }

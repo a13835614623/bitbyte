@@ -65,4 +65,11 @@
                                c.comment_floor = cr.reply_comment_floor)
         WHERE c.comment_article = #{articleId}
     </select>
+    <!--根据用户ID获取发布文章的评论数量-->
+    <select id="findUserArticleCommentCountByUserId" resultType="Long">
+        select count(*)
+        from article a,comment c
+        where a.article_id=c.comment_article
+        and a.article_user=#{userId}
+    </select>
 </mapper>

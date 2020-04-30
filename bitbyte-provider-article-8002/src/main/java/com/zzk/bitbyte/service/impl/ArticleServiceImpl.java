@@ -419,5 +419,10 @@ public class ArticleServiceImpl implements ArticleService {
     public Long findArticleReadCountByUserId(String userId) throws Exception {
         return articleExtendMapper.findArticleReadCountByUserId(userId);
     }
+
+    @Override
+    public Long findArticleLikeCountByUserId(String userId) throws Exception {
+        return articleExtendMapper.findArticleLikeCountByUserId(userId);
+    }
 }
 

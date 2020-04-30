@@ -307,4 +307,12 @@ public class ArticleController {
     public ResponseState getArticleReadCountByUserId(@RequestParam("userId") String userId) throws Exception {
         return ResponseState.success("获取用户文章阅读数成功!").setData(articleService.findArticleReadCountByUserId(userId));
     }
+
+    /**
+     * 获取用户文章点赞总数
+     */
+    @RequestMapping("/user/like/count")
+    public ResponseState getArticleLikeCountByUserId(@RequestParam("userId") String userId) throws Exception {
+        return ResponseState.success("获取用户文章点赞数成功!").setData(articleService.findArticleLikeCountByUserId(userId));
+    }
 }

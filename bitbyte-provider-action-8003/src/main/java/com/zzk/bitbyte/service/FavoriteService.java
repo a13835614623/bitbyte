@@ -51,6 +51,7 @@ public interface FavoriteService {
      * @return
      */
     List<FavoriteGroup> findFavoriteGroupListByUserId(String userId) throws Exception;
+
     /**
      * 根据用户ID查询分组数量
      *
@@ -58,6 +59,7 @@ public interface FavoriteService {
      * @return
      */
     long findFavoriteGroupListCountByUserId(String userId) throws Exception;
+
     /**
      * 根据组ID以及分页开始索引和数量查询收藏列表
      *
@@ -70,17 +72,40 @@ public interface FavoriteService {
 
     /**
      * 根据组ID查询收藏数量
+     *
      * @param groupId
      * @return
      * @throws Exception
      */
     long findFavoriteListCount(String groupId) throws Exception;
 
-        /**
-         * 获取收藏情况
-         *
-         * @param articleId 文章ID
-         * @param userId    用户ID
-         */
+    /**
+     * 获取收藏情况
+     *
+     * @param articleId 文章ID
+     * @param userId    用户ID
+     */
     Favorite findFavoriteByArticleIdAndUserId(String articleId, String userId) throws Exception;
+
+    /**
+     * 根据用户ID获取收藏数量
+     *
+     * @param userId
+     * @return
+     */
+    Long findUserFavoriteCountByUserId(String userId) throws Exception;
+
+    /**
+     * 根据用户ID获取用户文章收藏总数
+     * @param userId
+     * @return
+     */
+    Long findUserArticleFavoriteCountByUserId(String userId) throws Exception;
+
+    /**
+     * 根据文章ID获取收藏数
+     * @param articleId
+     * @return
+     */
+    Long findArticleFavoriteCountByArticleId(String articleId) throws Exception;
 }

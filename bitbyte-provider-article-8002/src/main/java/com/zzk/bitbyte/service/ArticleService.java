@@ -154,4 +154,11 @@ public interface ArticleService {
      */
     Long findArticleReadCountByUserId(String userId) throws Exception;
 
+    /**
+     * 根据用户id查询发布文章的点赞数
+     * @param userId
+     * @return
+     */
+    Long findArticleLikeCountByUserId(String userId) throws Exception;
+
 }

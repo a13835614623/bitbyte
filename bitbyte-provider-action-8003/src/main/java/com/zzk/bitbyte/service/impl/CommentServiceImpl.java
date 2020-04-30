@@ -74,4 +74,9 @@ public class CommentServiceImpl implements CommentService {
         return commentExtendMapper.findArticleCommentsById(articleId);
     }
 
+    @Override
+    public Long findUserArticleCommentCountByUserId(String userId) {
+        Assert.notNull(userId,"userId不能为空!");
+        return commentExtendMapper.findUserArticleCommentCountByUserId(userId);
+    }
 }

@@ -102,4 +102,46 @@ public class FavoriteController {
         return ResponseState.success("查询成功!")
                 .setData(favoriteService.findFavoriteByArticleIdAndUserId(articleId, userId));
     }
+
+    /**
+     * 根据用户ID获取收藏总数
+     * @param userId 用户id
+     */
+    @RequestMapping(value = "/user/count")
+    public ResponseState getUserFavoriteCountByUserId(@RequestParam("userId") String userId)
+            throws Exception {
+        ResponseState state = new ResponseState();
+        state.setStatus(ResponseState.STATUS_SUCCESS);
+        state.setData(favoriteService.findUserFavoriteCountByUserId(userId));
+        state.setMessage("获取用户收藏数量成功！");
+        return state;
+    }
+
+    /**
+     * 根据用户ID获取文章被收藏总数
+     * @param userId 用户id
+     */
+    @RequestMapping(value = "/user/article/count")
+    public ResponseState getUserArticleFavoriteCountByUserId(@RequestParam("userId") String userId)
+            throws Exception {
+        ResponseState state = new ResponseState();
+        state.setStatus(ResponseState.STATUS_SUCCESS);
+        state.setData(favoriteService.findUserArticleFavoriteCountByUserId(userId));
+        state.setMessage("获取用户文章收藏总数成功！");
+        return state;
+    }
+
+    /**
+     * 根据文章ID获取收藏总数
+     * @param articleId 文章id
+     */
+    @RequestMapping(value = "/article/count")
+    public ResponseState getArticleFavoriteCountByArticleId(@RequestParam("articleId") String articleId)
+            throws Exception {
+        ResponseState state = new ResponseState();
+        state.setStatus(ResponseState.STATUS_SUCCESS);
+        state.setData(favoriteService.findArticleFavoriteCountByArticleId(articleId));
+        state.setMessage("获取文章收藏数量成功！");
+        return state;
+    }
 }

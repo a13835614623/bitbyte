@@ -14,4 +14,11 @@ public interface CommentExtendMapper {
      * @throws Exception
      */
     public List<CommentExtend> findArticleCommentsById(String articleId);
+
+    /**
+     * 根据用户ID获取发布文章的评论数量
+     * @param userId
+     * @return
+     */
+    Long findUserArticleCommentCountByUserId(String userId);
 }

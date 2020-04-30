@@ -62,4 +62,17 @@
           and f.favorite_article = #{articleId}
           and fg.favorite_user = #{userId}
     </select>
+
+
+    <select id="findUserFavoriteCountByUserId" resultType="Long">
+        select count(f.favorite_id) from favorite_group fg,favorite f
+        where fg.favorite_user=#{userId}
+          and f.favorite_group=fg.favorite_group_id
+    </select>
+
+    <select id="findUserArticleFavoriteCountByUserId" resultType="Long">
+        select count(f.favorite_id) from article a,favorite f
+        where a.article_id=f.favorite_article
+        and a.article_user=#{userId}
+    </select>
 </mapper>

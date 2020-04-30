@@ -33,6 +33,18 @@ public interface ArticleExtendMapper {
     Long findArticleReadCountByUserId(String userId);
 
     /**
+     * 根据用户id查询发布文章的点赞数
+     * @param userId
+     * @return
+     */
+    @Select("select count(*) " +
+            "from article a,article_like al " +
+            "where al.like_article=a.article_id " +
+            "and a.article_user=#{userId} " +
+            "and a.article_state=28")
+    Long findArticleLikeCountByUserId(String userId);
+
+    /**
      * 获取随机数据
      * @param count 数量
      * @return

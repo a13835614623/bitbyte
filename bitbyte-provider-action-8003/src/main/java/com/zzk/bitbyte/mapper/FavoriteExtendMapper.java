@@ -36,4 +36,18 @@ public interface FavoriteExtendMapper {
      */
     Favorite findFavoriteByArticleIdAndUserId(@Param("articleId") String articleId,
                                               @Param("userId") String userId);
+
+    /**
+     * 根据用户ID获取用户文章的收藏总数
+     * @param userId
+     * @return
+     */
+    Long findUserArticleFavoriteCountByUserId(String userId);
+
+    /**
+     * 根据用户ID获取用户的收藏总数
+     * @param userId
+     * @return
+     */
+    Long findUserFavoriteCountByUserId(String userId);
 }
