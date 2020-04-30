@@ -128,23 +128,15 @@ public class UserController {
         user1.setUserEmail(user.getUserEmail());
         queryVo.setUser(user1);
         ResponseState state = new ResponseState();
-        // 获取校验错误信息
-        Integer result = userService.findUsersCountByQueryVo(queryVo);
-        if (result != null && result > 0) {
-            state.setStatus(ResponseState.STATUS_WARNING);
-            state.setMessage("手机号或邮箱已经被注册!");
-            return state;
-        } else {
-            user.setUserPic("user.png");
-            User regUser = userService.addUser(user);
-            // 设置角色为USER
-            authorityService.addRoleToUser(Roles.USER.getRoleId(), regUser.getUserId());
-            state.setStatus(ResponseState.STATUS_SUCCESS);
-            state.setMessage("恭喜你,注册成功!");
-            // 记录用户
-            addRecord("注册", regUser.getUserId());
-            return state;
-        }
+        user.setUserPic("user.png");
+        User regUser = userService.addUser(user);
+        // 设置角色为USER
+        authorityService.addRoleToUser(Roles.USER.getRoleId(), regUser.getUserId());
+        state.setStatus(ResponseState.STATUS_SUCCESS);
+        state.setMessage("恭喜你,注册成功!");
+        // 记录用户
+        addRecord("注册", regUser.getUserId());
+        return state;
     }
 
     /**

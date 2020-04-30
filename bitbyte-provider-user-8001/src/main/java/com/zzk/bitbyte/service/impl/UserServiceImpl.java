@@ -34,12 +34,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addUser(User user) throws Exception {
-        Util.validateObj(user, USER);
-        user.setUserId(UUID.randomUUID().toString());
-        Date date = new Date();
-        user.setCreateat(date);
-        user.setUpdateat(date);
-        usermapper.insert(user);
+        try {
+            Util.validateObj(user, USER);
+            user.setUserId(UUID.randomUUID().toString());
+            Date date = new Date();
+            user.setCreateat(date);
+            user.setUpdateat(date);
+            user.setUserState(UserState.NORMAL.getValueId());
+            usermapper.insert(user);
+        }catch (Exception e){
+            throw new Exception("手机号/邮箱已被注册!");
+        }
         return user;
     }
 
