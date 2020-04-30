@@ -414,5 +414,10 @@ public class ArticleServiceImpl implements ArticleService {
     private List<ArticleExtend> convertIdToArticle(List<String> recommendArticleIdList) {
         return recommendArticleIdList.stream().map(articleExtendMapper::findArticleExtendById).collect(Collectors.toList());
     }
+
+    @Override
+    public Long findArticleReadCountByUserId(String userId) throws Exception {
+        return articleExtendMapper.findArticleReadCountByUserId(userId);
+    }
 }
 

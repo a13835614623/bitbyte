@@ -146,4 +146,12 @@ public interface ArticleService {
      */
     List<ArticleExtend> findRecommendArticleList(String userId) throws Exception;
 
+    /**
+     * 获取用户发布文章的阅读总数
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    Long findArticleReadCountByUserId(String userId) throws Exception;
+
 }

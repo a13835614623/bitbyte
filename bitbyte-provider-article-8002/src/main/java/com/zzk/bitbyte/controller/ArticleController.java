@@ -299,4 +299,12 @@ public class ArticleController {
         state.setMessage("文章阅读+1成功!");
         return state;
     }
+
+    /**
+     * 获取用户文章阅读总数
+     */
+    @RequestMapping("/user/read/count")
+    public ResponseState getArticleReadCountByUserId(@RequestParam("userId") String userId) throws Exception {
+        return ResponseState.success("获取用户文章阅读数成功!").setData(articleService.findArticleReadCountByUserId(userId));
+    }
 }

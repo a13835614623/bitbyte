@@ -4,6 +4,7 @@ import com.zzk.bitbyte.po.Article;
 import com.zzk.bitbyte.po.extend.ArticleExtend;
 import com.zzk.bitbyte.po.query.ArticleQueryVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -22,6 +23,14 @@ public interface ArticleExtendMapper {
      * @throws Exception
      */
     ArticleExtend findArticleExtendById(String articleId);
+
+    /**
+     * 根据用户id查询发布文章的阅读量
+     * @param userId
+     * @return
+     */
+    @Select("select sum(a.article_read) from article a where a.article_user=#{userId} and a.article_state=28")
+    Long findArticleReadCountByUserId(String userId);
 
     /**
      * 获取随机数据
