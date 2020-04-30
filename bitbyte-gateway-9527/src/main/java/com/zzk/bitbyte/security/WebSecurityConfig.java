@@ -60,7 +60,8 @@ public class WebSecurityConfig {
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) throws Exception {
         http.authorizeExchange()
-                .pathMatchers("/api/admin/**").hasRole(Roles.ADMIN)
+                .pathMatchers("/api/admin/**","/api/user/delete","/api/user/perm/**",
+                        "/api/user/role/**","/api/user/authority/**").hasRole(Roles.ADMIN)
                 .pathMatchers("/api/audit/**").hasRole(Roles.AUDITOR)
                 .anyExchange().permitAll()
                 .and()
