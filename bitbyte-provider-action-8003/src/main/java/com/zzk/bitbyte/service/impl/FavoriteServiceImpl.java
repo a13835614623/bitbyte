@@ -142,7 +142,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public Favorite findFavoriteByArticleIdAndUserId(String articleId, String userId) throws Exception {
         Util.validateStr(userId,"用户ID" );
-        Util.validateStr(articleId,"分组ID");
+        Util.validateStr(articleId,"文章ID");
         return favoriteExtendMapper.findFavoriteByArticleIdAndUserId(articleId, userId);
     }
 

@@ -61,6 +61,7 @@
         where f.favorite_group = fg.favorite_group_id
           and f.favorite_article = #{articleId}
           and fg.favorite_user = #{userId}
+        limit 1
     </select>
 
 
