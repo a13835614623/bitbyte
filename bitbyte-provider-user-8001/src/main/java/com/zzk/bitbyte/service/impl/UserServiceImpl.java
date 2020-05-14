@@ -55,7 +55,6 @@ public class UserServiceImpl implements UserService {
         user.setUserId(userId);
         user.setUserState(UserState.DELETED.getValueId());
         usermapper.updateByPrimaryKeySelective(user);
-        usermapper.deleteByPrimaryKey(userId);
         // 删除信息缓存
         redisUtil.del(KEY_USER_PRE + userId);
     }
