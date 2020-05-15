@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
             user.setUpdateat(date);
             user.setUserState(UserState.NORMAL.getValueId());
             usermapper.insert(user);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new Exception("手机号/邮箱已被注册!");
         }
         return user;
@@ -64,7 +64,11 @@ public class UserServiceImpl implements UserService {
         Util.validateObj(user, USER);
         String userId = user.getUserId();
         Util.validateStr(userId, "用户id");
-        userExtendMapper.updateUser(user);
+        try {
+            userExtendMapper.updateUser(user);
+        }catch (Exception e){
+            throw new Exception("更新失败!");
+        }
         // 删除信息缓存
         redisUtil.del(KEY_USER_PRE + userId);
     }
@@ -76,7 +80,7 @@ public class UserServiceImpl implements UserService {
         user.setUserBirthday(long2Date(map.get("userBirthday")));
         user.setUserPassword((String) map.get("userPassword"));
         user.setUserEmail((String) map.get("userEmail"));
-        user.setUserMobile((String) map.get("userEmail"));
+        user.setUserMobile((String) map.get("userMobile"));
         user.setUserPic((String) map.get("userPic"));
         //int
         user.setUserState(Integer.parseInt((String) map.get("userState")));
@@ -135,16 +139,18 @@ public class UserServiceImpl implements UserService {
         Util.validateQueryVo(vo);
         return userExtendMapper.findUsersCountByQueryVo(vo);
     }
+
     private void validate(String userId, Integer start, Integer count) throws Exception {
-        Util.validateStr(userId,"用户ID");
+        Util.validateStr(userId, "用户ID");
         Util.validateObj(start, "开始索引不能为空!");
         Util.validateObj(count, "数量不能为空!");
     }
+
     @Override
     public List<User> findSubscribersById(String userId, Integer start, Integer count) throws Exception {
-        validate(userId,start,count);
-        start=Math.max(start, 0);
-        count=Math.min(count, 10);
+        validate(userId, start, count);
+        start = Math.max(start, 0);
+        count = Math.min(count, 10);
         return userExtendMapper.findSubscribersByUserId(userId, start, count);
     }
 
@@ -164,21 +170,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findFansByUserId(String userId, Integer start, Integer count) throws Exception {
-        validate(userId,start,count);
-        start=Math.max(start, 0);
-        count=Math.min(count, 10);
-        return userExtendMapper.findFansByUserId(userId,start,count);
+        validate(userId, start, count);
+        start = Math.max(start, 0);
+        count = Math.min(count, 10);
+        return userExtendMapper.findFansByUserId(userId, start, count);
     }
 
     @Override
     public long findFansCountByUserId(String userId) throws Exception {
-        Util.validateStr(userId,"用户ID");
+        Util.validateStr(userId, "用户ID");
         return userExtendMapper.findFansCountByUserId(userId);
     }
 
     @Override
     public long findSubscriberCountByUserId(String userId) throws Exception {
-        Util.validateStr(userId,"用户ID");
+        Util.validateStr(userId, "用户ID");
         return userExtendMapper.findSubscriberCountByUserId(userId);
     }
 }

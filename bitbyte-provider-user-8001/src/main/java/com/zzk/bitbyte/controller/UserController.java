@@ -10,9 +10,7 @@ import com.zzk.bitbyte.po.extend.UserExtend;
 import com.zzk.bitbyte.po.query.UserQueryVo;
 import com.zzk.bitbyte.service.AuthorityService;
 import com.zzk.bitbyte.service.UserService;
-import com.zzk.bitbyte.util.ResponseState;
-import com.zzk.bitbyte.util.Roles;
-import com.zzk.bitbyte.util.Util;
+import com.zzk.bitbyte.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.stream.annotation.EnableBinding;
@@ -49,6 +47,10 @@ public class UserController {
 
     @Autowired
     private AuthorityService authorityService;
+
+    @Autowired
+    private VerifyUtil verifyUtil;
+
     /**
      * 添加记录
      *
@@ -318,5 +320,28 @@ public class UserController {
     @RequestMapping(value = "/fans/count")
     public ResponseState getFansCount(@RequestParam("userId") String userId) throws Exception {
         return ResponseState.success("获取关注数量成功").setData(userService.findFansCountByUserId(userId));
+    }
+
+    /**
+     * 发送验证码
+     * @param email
+     * @return
+     */
+    @RequestMapping("/verify/send")
+    public ResponseState sendVerifyCode(@RequestParam("email") String email) throws Exception {
+        verifyUtil.send(email);
+        return ResponseState.success("发送成功!");
+    }
+
+    /**
+     * 验证验证码
+     * @param code
+     * @return
+     */
+    @RequestMapping("/verify/check")
+    public ResponseState checkVerifyCode(@RequestParam("email") String email,
+                                         @RequestParam("code") String code) throws Exception {
+        verifyUtil.verify(email,code);
+        return ResponseState.success("验证成功!");
     }
 }
