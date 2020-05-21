@@ -82,16 +82,6 @@
             </resource>
         </resources>
         <plugins>
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-jar-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    &lt;!&ndash; 指定打包的jar包输出路径&ndash;&gt;-->
-<!--                    <outputDirectory>-->
-<!--                        C:/SpringCloud/bitbyte/jar-->
-<!--                    </outputDirectory>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
